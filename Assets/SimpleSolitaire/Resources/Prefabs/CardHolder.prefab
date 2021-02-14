@@ -89,7 +89,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: f380b1a6f5007674591cccb1be2bcde0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -166,6 +166,7 @@ MonoBehaviour:
   CardLogicComponent: {fileID: 0}
   BackgroundImage: {fileID: 114367107106995086}
   animator: {fileID: 5145609856377818203}
+  childAnimator: {fileID: 5955525504423309332}
   CardRect: {fileID: 224941297398026578}
 --- !u!95 &5145609856377818203
 Animator:

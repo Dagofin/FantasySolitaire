@@ -18,13 +18,13 @@ namespace SimpleSolitaire.Controller
         private IEnumerator _doubleClickAutoCompleteCoroutine;
         private IEnumerator _autoCompleteCoroutine;
         private bool _isCanComplete = true;
-        public int faceDownCardsCount;
+        //public int faceDownCardsCount;
         public int packDeckCardsCount;
         public int wastePackCardsCount;
 
         public void Awake()
         {
-            faceDownCardsCount = 21;
+            //faceDownCardsCount = 0;
         }
 
         public void Update()

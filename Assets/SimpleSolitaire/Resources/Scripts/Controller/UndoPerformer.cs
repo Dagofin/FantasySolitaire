@@ -63,7 +63,7 @@ namespace SimpleSolitaire.Controller
 					}
                     else
                     {
-						UpdateUndoCounts();
+						return;
                     }
 					
 				}

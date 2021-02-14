@@ -1,4 +1,5 @@
 ﻿using SimpleSolitaire.Model.Config;
+using SimpleSolitaire.Model.Config;
 using SimpleSolitaire.Model.Enum;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -208,7 +209,9 @@ namespace SimpleSolitaire.Controller
 
 					if (PackDeck.GetCardNums() > 0)
 					{
+						//if you click on the pack deck, send a card to the waste deck
 						WasteDeck.PushCard(PackDeck.Pop());
+						//update the cards positions in the pack and waste decks to reflect the code change of adding the card from the pack deck to the waste deck
 						PackDeck.UpdateCardsPosition(false);
 						WasteDeck.UpdateCardsPosition(false);
 					}
@@ -385,7 +388,8 @@ namespace SimpleSolitaire.Controller
         {
 			if(autoCompleteActive == false)
             {
-				if (faceDownCardsCount == 0 && PackDeck.CardsArray.Count == 0 && WasteDeck.CardsArray.Count <= 1)
+				//if (faceDownCardsCount == 0 && PackDeck.CardsArray.Count == 0 && WasteDeck.CardsArray.Count <= 1)
+				if(faceDownCardsCount == 0)
 				{
 					//activate autocomplete button
 					autoCompleteActive = true;

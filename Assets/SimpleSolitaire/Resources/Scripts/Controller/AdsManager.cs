@@ -56,12 +56,6 @@ namespace SimpleSolitaire.Controller {
                 CheckNoAdsOnStart();
             }
 
-
-
-            //if (permanentNoAds == true || tempNoAds == true)
-            //{
-            //    adsActive = false;
-            //}
         }
 
         void Update()
@@ -80,16 +74,7 @@ namespace SimpleSolitaire.Controller {
                 //When the no ads timer expires, turn ads back on and save to AdsDAta
                 if(noAdsTimer <= 0)
                 {
-                    //turn ads back on
-                    tempNoAds = false;
-                    //save to AdsData
-                    SaveLoadManager.SaveAdsInfo(this);
-
-                    //revert NoAdsTimer to NoAdsButton
-                    //disable NoAdsTimer
-                    tempNoAdsTimer.SetActive(false);
-                    //enable NoAdsButton
-                    tempNoAdsButton.SetActive(true);
+                     TempAdsTimerExpired();
                 }
             }
             else
@@ -106,7 +91,6 @@ namespace SimpleSolitaire.Controller {
             else
             {
                 Advertisement.Show(p);
-                //return;
             }
         }
 
@@ -121,9 +105,7 @@ namespace SimpleSolitaire.Controller {
                 //if more than 30 minutes have passed, turn ads back on
                 if(secondsPassed >= 1800)
                 {
-                    tempNoAds = false;
-                    //Save to AdsData
-                    SaveLoadManager.SaveAdsInfo(this);
+                    TempAdsTimerExpired();
                 }
                 //if less than 30 minutes have passed, set the timer to the appropriate time and begin counting down
                 else if(secondsPassed < 1800)
@@ -132,7 +114,11 @@ namespace SimpleSolitaire.Controller {
                     noAdsTimer = noAdsDurationSeconds;
                     //subract elapsed seconds from timer
                     noAdsTimer = noAdsTimer - secondsPassed;
-                    
+
+                    //disable undo counter
+                    undoPerformer.IsCountable = false;
+                    undoPerformer.ActivateUndoButton();
+
                     //toggle button/timer
                     //disable TempDisableAdsButton
                     tempNoAdsButton.SetActive(false);
@@ -145,6 +131,24 @@ namespace SimpleSolitaire.Controller {
             //if tempNoAds is false, then ads weren't off when the Player exited the game, no action.
             else
                 return;
+        }
+
+        public void TempAdsTimerExpired()
+        {
+            //enable Undo counter
+            undoPerformer.IsCountable = true;
+            undoPerformer.ActivateUndoButton();
+
+            //turn ads back on
+            tempNoAds = false;
+            //save to AdsData
+            SaveLoadManager.SaveAdsInfo(this);
+
+            //revert NoAdsTimer to NoAdsButton
+            //disable NoAdsTimer
+            tempNoAdsTimer.SetActive(false);
+            //enable NoAdsButton
+            tempNoAdsButton.SetActive(true);
         }
 
         public static int SecondsSinceTempNoAds(System.DateTime from, System.DateTime to)
@@ -180,8 +184,7 @@ namespace SimpleSolitaire.Controller {
 
             //set Undos to Unlimited
             undoPerformer.IsCountable = false;
-            //Save Undo Info
-            //---------------------------------------------------------------------------------------------------------------------
+            undoPerformer.ActivateUndoButton();
 
             SaveLoadManager.SaveAdsInfo(this);
         }

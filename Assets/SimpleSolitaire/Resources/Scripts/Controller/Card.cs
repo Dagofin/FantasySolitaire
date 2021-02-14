@@ -23,6 +23,7 @@ namespace SimpleSolitaire.Controller
         public CardLogic CardLogicComponent;
         public Image BackgroundImage;
         public Animator animator;
+        public Animator childAnimator;
 
         private Vector3 _lastMousePosition = Vector3.zero;
         private Vector3 _offset;
@@ -231,14 +232,16 @@ namespace SimpleSolitaire.Controller
 
         public void CardFlipAnim()
         {
-            UnityEngine.Debug.Log("Do that flippy thang");
+            //UnityEngine.Debug.Log("Do that flippy thang");
             //animator.Play("Card_Flip");
             animator.SetBool("flip", true);
+            childAnimator.SetBool("flip", true);
         }
         public void KillFlipAnim()
         {
             animator.SetBool("flip", false);
-            UnityEngine.Debug.Log("Test Print");
+            childAnimator.SetBool("flip", false);
+            //UnityEngine.Debug.Log("Test Print");
 
         }
 
@@ -264,15 +267,26 @@ namespace SimpleSolitaire.Controller
         /// </summary>
         public void SetFaceDown()
         {
+            if(isFaceDown == false)
+            {
+                isFaceDown = true;
+                CardLogicComponent.faceDownCardsCount++;
+                //print("Flip Card Down: Face Down Count is: " + CardLogicComponent.faceDownCardsCount);
+            }
+
+
+        }
+        public void SetPackDeckFaceDown()
+        {
             isFaceDown = true;
-            CardLogicComponent.faceDownCardsCount++;
         }
         public void SetFaceUp()
         {
             if (isFaceDown == true)
             {
-                //CardFlipAnim();
+                CardFlipAnim();
                 CardLogicComponent.faceDownCardsCount--;
+                //print("Flip Card Down: Face Down Count is: " + CardLogicComponent.faceDownCardsCount);
                 isFaceDown = false;
             }
         }
