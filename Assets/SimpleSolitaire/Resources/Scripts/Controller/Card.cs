@@ -232,8 +232,6 @@ namespace SimpleSolitaire.Controller
 
         public void CardFlipAnim()
         {
-            //UnityEngine.Debug.Log("Do that flippy thang");
-            //animator.Play("Card_Flip");
             animator.SetBool("flip", true);
             childAnimator.SetBool("flip", true);
         }
@@ -241,8 +239,6 @@ namespace SimpleSolitaire.Controller
         {
             animator.SetBool("flip", false);
             childAnimator.SetBool("flip", false);
-            //UnityEngine.Debug.Log("Test Print");
-
         }
 
         public string GetTypeName()

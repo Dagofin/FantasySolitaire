@@ -36,13 +36,16 @@ namespace SimpleSolitaire.Controller
         /// </summary>
         private void Hint(float time = 0.75f, bool isNeedSetCard = false, Card card = null)
         {
+            //if Hints list has hints and the HintProcess isn't running, and this object is active
             if (Hints.Count > 0 && !IsHintProcess && gameObject.activeInHierarchy)
             {
+                //if HintCoroutine is currently running, cancel this action
                 if (HintCoroutine != null)
                 {
                     IsHintProcess = false;
                     StopCoroutine(HintCoroutine);
                 }
+                //if HintCoroutine isn't running, start a HintCoroutine as HintTranslate, send the card to the hint spot
                 //move card to the new location according to speed DoubleTapTranslateTime
                 HintCoroutine = HintTranslate(time, isNeedSetCard, card);
                 StartCoroutine(HintCoroutine);
@@ -78,54 +81,109 @@ namespace SimpleSolitaire.Controller
         /// </summary>
         private IEnumerator HintTranslate(float time = 0.75f, bool isNeedSetCard = false, Card card = null)
         {
+            //time = speed of translate movement
+            //isNeedSetCard = 
+            //card = card being moved
             IsHintProcess = true;
 
-            List<HintElement> hints = isNeedSetCard ? AutoCompleteHints : Hints;
-            if (isNeedSetCard) CurrentHintIndex = 0;
-            if (card != null) CurrentHintIndex = hints.FindIndex(x => x.HintCard == card);
-
-            if (card != null)
+            //Which list of hints are used is determined by isNeedSetCard
+            //if the Player clicked this card, AutoCompleteHints is used. If the Hint button was pressed, Hints is used. 
+            //TEMP CHANGED
+            //List<HintElement> hints = isNeedSetCard ? AutoCompleteHints : Hints;
+            List<HintElement> hints = Hints;
+            //if the Player clicked this card to move it, set the CurrentHintIndex to 0(first in the list)
+            if (isNeedSetCard) 
             {
-                //if (CurrentHintIndex == -1 || hints[CurrentHintIndex].DestinationPack != DeckType.DECK_TYPE_ACE)
-                if (CurrentHintIndex == -1)
+                CurrentHintIndex = 0;
+            }
+
+            if (card != null) 
+            {
+                int checkIfValidAutoComplete = hints.FindIndex(x => x.HintCard == card);
+                //if we click on a card that doesn't have a valid autocomplete, CurrentHintIndex = -1.
+                if (checkIfValidAutoComplete == -1)
                 {
-                    //Debug.LogWarning("After double tap! This Card: " + card.CardNumber + " is not available for complete to ace pack.");
                     IsHintProcess = false;
                     yield break;
                 }
+                else
+                {
+                    //CurrentHintIndex = hints.FindIndex(x => x.HintCard == card);
+                    CurrentHintIndex = checkIfValidAutoComplete;
+                } 
             }
+
+            //if the Player clicked this card to move it, set the CurrentHintIndex to 0(first in the list)
+            //if (isNeedSetCard)
+            //{
+                //CurrentHintIndex = 0;
+            //}
+
+            //if (card != null)
+            //{
+                //if (CurrentHintIndex == -1 || hints[CurrentHintIndex].DestinationPack != DeckType.DECK_TYPE_ACE)
+            //    if (CurrentHintIndex == -1)
+            //    {
+                    //Debug.LogWarning("After double tap! This Card: " + card.CardNumber + " is not available for complete to ace pack.");
+            //        IsHintProcess = false;
+            //        yield break;
+            //    }
+            //}
+
+            //Variable for the Lerp move function
             var t = 0f;
+            //set the hintCard to be moved as the correct card in the List
             Card hintCard = hints[CurrentHintIndex].HintCard;
+            //set cards position(why?)
             hintCard.Deck.UpdateCardsPosition(false);
 
+            //store the card's current order in the hierarchy before moving so it can be reset later
             CurrentHintSiblingIndex = hintCard.transform.GetSiblingIndex();
 
+            //set the hintCard to the top of it's current Deck(why?)
             hintCard.Deck.SetCardsToTop(hintCard);
 
+
+            //Physically move the hintCard where it needs to go
             while (t < 1)
             {
+                //use Time.deltaTime and time to progress the Lerp function from 0 to 1
                 t += Time.deltaTime / time;
+                //Lerp the hintCard's position from it's current position to it's destination
+                //hintCard.transform.localPosition = Vector3.Lerp(hints[CurrentHintIndex].FromPosition, hints[CurrentHintIndex].ToPosition - new Vector3(0,hintCard.Deck._verticalSpace * 3,0), t);
                 hintCard.transform.localPosition = Vector3.Lerp(hints[CurrentHintIndex].FromPosition, hints[CurrentHintIndex].ToPosition, t);
+                //hintCard.transform.localPosition = Vector3.Lerp(hints[CurrentHintIndex].FromPosition, hints[CurrentHintIndex].ToPosition - new Vector3(0, 32, 0), t);
 
                 yield return new WaitForEndOfFrame();
+                //sets the position of the card, but we're already updating it via the Lerp? Maybe a reset function due to the local position above
                 hints[CurrentHintIndex].HintCard.Deck.SetPositionFromCard(hintCard,
                                                                      hintCard.transform.position.x,
                                                                      hintCard.transform.position.y);
             }
 
+            //---------------------------------------------- Not going to use, Hint function is going to change ---------------------------------------------------------------------------
+            /*
+            //If IsHasHint returns true AND isNeedSetCard is false(aka the Player didn't click this card), reset this card to it's original state(before it was translated)
             if (IsHasHint() && !isNeedSetCard)
             {
+                //set cards position(why?)
                 hintCard.Deck.UpdateCardsPosition(false);
+                //set the hintCard's position to the original starting position
                 hintCard.transform.localPosition = hints[CurrentHintIndex].FromPosition;
+                //set the hintCard's order in the heirarchy to it's original order
                 hintCard.transform.SetSiblingIndex(CurrentHintSiblingIndex);
+                //Increment the index for the next Hint so we're not giving the same hint over and over. If we reach the end of the List, reset back to the beginning
                 CurrentHintIndex = CurrentHintIndex == hints.Count - 1 ? CurrentHintIndex = 0 : CurrentHintIndex + 1;
             }
-
+            */
+            //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            //If the Player DID click this card use OnDragEnd to permanently set the moved card to it's new stack
             if (isNeedSetCard)
             {
+                //call the logic to set the hintCard to it's Deck permanently
                 _cardLogicComponent.OnDragEnd(hintCard);
             }
-
+            //end the process
             IsHintProcess = false;
         }
 
@@ -245,7 +303,8 @@ namespace SimpleSolitaire.Controller
                                 {
                                     if (isHasAutoCompleteHints)
                                     {
-                                        AutoCompleteHints.Add(new HintElement(card, card.transform.localPosition, topTargetDeckCard != null ? topTargetDeckCard.transform.localPosition : targetDeck.transform.localPosition, targetDeck.Type));
+                                        // -------------------------------------------------- DIAL IN THE TARGET LOCATION OF THE CARD SOMEHOW -----------------------------------------------------------------
+                                        AutoCompleteHints.Add(new HintElement(card, card.transform.localPosition, topTargetDeckCard != null ? topTargetDeckCard.transform.localPosition - new Vector3(0, card.Deck._verticalSpace, 0) : targetDeck.transform.localPosition, targetDeck.Type));
                                     }
 
                                     Hints.Add(new HintElement(card, card.transform.localPosition, topTargetDeckCard != null ? topTargetDeckCard.transform.localPosition : targetDeck.transform.localPosition, targetDeck.Type));

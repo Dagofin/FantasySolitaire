@@ -16,7 +16,7 @@ namespace SimpleSolitaire.Controller
 
         private float _deckWidth;
         private float _deckHeight;
-        private float _verticalSpace;
+        public float _verticalSpace;
         private float _wasteHorizontalSpace;
 
         [Space(5f)]
@@ -279,23 +279,28 @@ namespace SimpleSolitaire.Controller
             /// <param name="y">Position by Y axis</param>
             public void SetPositionFromCard(Card card, float x, float y)
             {
+                //declare i outside of the for loop so it's value can be persistent
                 int i;
                 for (i = 0; i < CardsArray.Count; i++)
                 {
+                    //when we find the card we're looking for, break the for loop so we can use i's value
                     if ((Card)CardsArray[i] == card)
                     {
                         break;
                     }
                 }
                 int m = 0;
+                //Start a new for loop at the index of i, this will update all cards after i
                 for (int j = i; j < CardsArray.Count; j++)
                 {
+                    //Set the card at index j to the x position specified, and offset the y position by the vertical card spacing
                     ((Card)CardsArray[j]).SetPosition(new Vector3(x, y - m++ * _verticalSpace, 0));
                 }
             }
 
             /// <summary>
             /// Collect card on aceDeck.
+            /// Way to set this specific card to the top of a deck. Check to see if the card we're looking for is in the deck, if it is, set it to the top of the pile
             /// </summary>
             /// <param name="card">Card for collect.</param>
             public void SetCardsToTop(Card card)
