@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
+using UnityEngine.UI;
 
 namespace SimpleSolitaire.Controller
 {
@@ -28,6 +29,11 @@ namespace SimpleSolitaire.Controller
         [Header("Setings:")]
         public float DoubleTapTranslateTime = 0.25f;
         public float HintTranslateTime = 0.75f;
+        public float hintTimerDefaultValue = 5.0f;
+        public float hintTimer = 5.0f;
+        public bool hintTimerCount = false;
+        public Card hintTimerCard;
+        public Deck packDeck;
 
         private IEnumerator HintCoroutine;
 
@@ -50,6 +56,66 @@ namespace SimpleSolitaire.Controller
                 HintCoroutine = HintTranslate(time, isNeedSetCard, card);
                 StartCoroutine(HintCoroutine);
             }
+        }
+
+        public void Update()
+        {
+            if (hintTimerCount)
+            {
+                //decrease hintTimer with time
+                hintTimer -= Time.deltaTime;
+
+                //if several seconds go by without Player input
+                if (hintTimer <= 0)
+                {
+                    hintTimerCount = false;
+                    //if a valid hint is available in the Autocomplete hints list(more important), activate a glow effect behind the hint card
+                    if (AutoCompleteHints.Count > 0)
+                    {
+                        //set glow card to hintCard of hints list
+                        int hintIndex = Random.Range(0, AutoCompleteHints.Count);
+                        hintTimerCard = AutoCompleteHints[hintIndex].HintCard;
+                        //-------TEMP: Change card color instead of glow effect------------------------------------
+                        hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.red;
+
+                    }
+                    /*
+                    //if a valid hint is available in the all Hints list(second priority), activate a glow effect behind the hint card
+                    else if (Hints.Count > 0)
+                    {
+                        //set glow card to hintCard of hints list
+                        int hintIndex = Random.Range(0, Hints.Count);
+                        hintTimerCard = Hints[hintIndex].HintCard;
+                        //-------TEMP: Change card color instead of glow effect------------------------------------
+                        hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.red;
+                    }
+                    */
+                    //else if no valid hint is available, active a glow effect behind the top card of the Pack Deck
+                    else
+                    {
+                        hintTimerCard = packDeck.CardsArray[packDeck.CardsArray.Count - 1];
+                        //-------TEMP: Change card color instead of glow effect------------------------------------
+                        hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.red;
+                    }
+                }
+            }
+
+
+        }
+
+        public void ResetHintTimer()
+        {
+            if(hintTimerCard != null)
+            {
+                //Reset hintTimer to default value
+                hintTimer = hintTimerDefaultValue;
+                //turn off the Hint effect -----------------------------------------------------------------------
+                hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.white;
+
+                //enable the hintTimer
+                hintTimerCount = true;
+            }
+
         }
 
         /// <summary>
@@ -316,8 +382,6 @@ namespace SimpleSolitaire.Controller
             }
 
             ActivateHintButton(IsHasHint());
-            //TEMP FLAG TESTING AUTOCOMPLETE FUNCTIONALITY 11111111111111111111111111111111111111111111111111111111111111111
-            //ActivateAutoCompleteHintButton(IsHasAutoCompleteHint());
         }
 
         public Card GetCurrentHintCard(bool isAutoComplete)

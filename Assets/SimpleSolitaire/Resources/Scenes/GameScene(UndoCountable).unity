@@ -7485,6 +7485,11 @@ MonoBehaviour:
   IsHintWasUsed: 0
   DoubleTapTranslateTime: 0.2
   HintTranslateTime: 0.75
+  hintTimerDefaultValue: 5
+  hintTimer: 5
+  hintTimerCount: 0
+  hintTimerCard: {fileID: 0}
+  packDeck: {fileID: 1240796342}
 --- !u!1 &419804167
 GameObject:
   m_ObjectHideFlags: 0

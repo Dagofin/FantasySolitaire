@@ -25,10 +25,12 @@ namespace SimpleSolitaire.Controller
         [SerializeField]
         private GameManager _gameManagerComponent;
         private AutoCompleteManager _autoCompleteManager;
+        private HintManager _hintManager;
 
         private void Awake()
         {
             _autoCompleteManager = GameObject.Find("AutoCompleteManager").GetComponent<AutoCompleteManager>();
+            _hintManager = GameObject.Find("HintManager").GetComponent<HintManager>();
             _deckHeight = _gameManagerComponent.Corners[2].y - _gameManagerComponent.Corners[0].y;
             _deckWidth = _gameManagerComponent.Corners[2].x - _gameManagerComponent.Corners[0].x;
             _verticalSpace = _deckHeight / 3.5f;
@@ -228,6 +230,9 @@ namespace SimpleSolitaire.Controller
                 }
             }
             UpdateCardsActiveStatus();
+
+            //Reset hintTimer and disable hint effect
+            _hintManager.ResetHintTimer();
         }
 
 

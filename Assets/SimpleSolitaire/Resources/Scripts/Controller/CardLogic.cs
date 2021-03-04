@@ -41,6 +41,7 @@ namespace SimpleSolitaire.Controller
 		private void Awake()
 		{
 			CardNumberArray = new int[Public.CARD_NUMS];
+			
 		}
 
         /// <summary>
@@ -52,6 +53,7 @@ namespace SimpleSolitaire.Controller
 			InitAllDeckArray();
 			UndoPerformerComponent.ResetUndoStates();
 			ParticleStars.Stop();
+			HintManagerComponent.hintTimerCount = true;
 		}
 
 		private void OnDisable()
