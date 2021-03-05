@@ -189,6 +189,8 @@ namespace SimpleSolitaire.Controller
         {
             CardStatus = 0;
             SetBackgroundImg(CardShirtManager.Instance.ShirtName);
+            //--------------------------------------------------------------------------------------------------------------
+            isFaceDown = true;
         }
 
         /// <summary>
@@ -284,6 +286,14 @@ namespace SimpleSolitaire.Controller
                 CardLogicComponent.faceDownCardsCount--;
                 //print("Flip Card Down: Face Down Count is: " + CardLogicComponent.faceDownCardsCount);
                 isFaceDown = false;
+            }
+        }
+        public void FirstTimeFaceUp()
+        {
+            if(isFaceDown == false)
+            {
+                UpdateCardImg();
+
             }
         }
     }

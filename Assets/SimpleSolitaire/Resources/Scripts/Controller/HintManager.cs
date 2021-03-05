@@ -32,8 +32,9 @@ namespace SimpleSolitaire.Controller
         public float hintTimerDefaultValue = 5.0f;
         public float hintTimer = 5.0f;
         public bool hintTimerCount = false;
-        public Card hintTimerCard;
+        public GameObject hintTimerCard;
         public Deck packDeck;
+        public Deck wasteDeck;
 
         private IEnumerator HintCoroutine;
 
@@ -74,7 +75,7 @@ namespace SimpleSolitaire.Controller
                     {
                         //set glow card to hintCard of hints list
                         int hintIndex = Random.Range(0, AutoCompleteHints.Count);
-                        hintTimerCard = AutoCompleteHints[hintIndex].HintCard;
+                        hintTimerCard = AutoCompleteHints[hintIndex].HintCard.gameObject;
                         //-------TEMP: Change card color instead of glow effect------------------------------------
                         hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.red;
 
@@ -90,12 +91,20 @@ namespace SimpleSolitaire.Controller
                         hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.red;
                     }
                     */
-                    //else if no valid hint is available, active a glow effect behind the top card of the Pack Deck
+                    //else if no valid hint is available, active a glow effect behind the top card of the Pack Deck, or Waste deck if the pack deck is empty
                     else
                     {
-                        hintTimerCard = packDeck.CardsArray[packDeck.CardsArray.Count - 1];
+                        if(packDeck.CardsArray.Count > 0)
+                        {
+                            hintTimerCard = packDeck.CardsArray[packDeck.CardsArray.Count - 1].gameObject;
+                        }
+                        else
+                        {
+                            //hintTimerCard = wasteDeck.CardsArray[wasteDeck.CardsArray.Count - 1];
+                            hintTimerCard = packDeck.gameObject;
+                        }
                         //-------TEMP: Change card color instead of glow effect------------------------------------
-                        hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.red;
+                        hintTimerCard.GetComponentInChildren<Image>().color = Color.red;
                     }
                 }
             }
@@ -110,7 +119,7 @@ namespace SimpleSolitaire.Controller
                 //Reset hintTimer to default value
                 hintTimer = hintTimerDefaultValue;
                 //turn off the Hint effect -----------------------------------------------------------------------
-                hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.white;
+                hintTimerCard.GetComponentInChildren<Image>().color = Color.white;
 
                 //enable the hintTimer
                 hintTimerCount = true;

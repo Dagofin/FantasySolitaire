@@ -7490,6 +7490,7 @@ MonoBehaviour:
   hintTimerCount: 0
   hintTimerCard: {fileID: 0}
   packDeck: {fileID: 1240796342}
+  wasteDeck: {fileID: 1435428562}
 --- !u!1 &419804167
 GameObject:
   m_ObjectHideFlags: 0

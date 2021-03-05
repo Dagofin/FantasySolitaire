@@ -212,7 +212,10 @@ namespace SimpleSolitaire.Controller
                         if (firstTime)
                         {
                             card.UpdateCardImg();
+                            //card.FirstTimeFaceUp();
                         }
+                        //card.SetFaceUp();
+                        card.UpdateCardImg();
                     }
                     //if this Card is any card but the first/top card in the deck
                     else

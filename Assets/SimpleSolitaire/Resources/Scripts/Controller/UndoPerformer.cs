@@ -187,11 +187,14 @@ namespace SimpleSolitaire.Controller
 		/// </summary>
 		public void LoadGame()
 		{
+			//if a lastGameKey exists, the Player has played a last game
 			if (PlayerPrefs.HasKey(_lastGameKey))
 			{
+				//load the lastGame from the Json utility
 				string lastGameData = PlayerPrefs.GetString(_lastGameKey);
 				StatesData = JsonUtility.FromJson<UndoData>(lastGameData);
 
+				//if StateData contains data, continue
 				if (StatesData.States.Count > 0)
 				{
 					_hintComponent.IsHintWasUsed = false;
@@ -220,12 +223,19 @@ namespace SimpleSolitaire.Controller
 								card.CardColor = cardRecord.CardColor;
 								card.IsDraggable = cardRecord.IsDraggable;
 								card.IndexZ = cardRecord.IndexZ;
+								card.isFaceDown = cardRecord.IsFaceDown;
 								card.Deck = cardRecord.Deck;
 								card.transform.localPosition = cardRecord.Position;
 								card.transform.SetSiblingIndex(cardRecord.SiblingIndex);
+
+								if(card.isFaceDown == true)
+                                {
+									_cardLogicComponent.faceDownCardsCount++;
+                                }
 							}
 						}
 						deck.UpdateCardsPosition(false);
+						//deck.UpdateCardsPosition(true);
 					}
 
 					StatesData.States.RemoveAt(StatesData.States.Count - 1);
@@ -308,6 +318,7 @@ namespace SimpleSolitaire.Controller
 		public int CardStatus;
 		public int CardColor;
 		public bool IsDraggable;
+		public bool IsFaceDown;
 
 		public int IndexZ;
 		public int SiblingIndex;
@@ -326,6 +337,7 @@ namespace SimpleSolitaire.Controller
 			Deck = card.Deck;
 			SiblingIndex = card.transform.GetSiblingIndex();
 			Position = card.transform.localPosition;
+			IsFaceDown = card.isFaceDown;
 		}
 	}
 
