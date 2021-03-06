@@ -135,9 +135,19 @@ namespace SimpleSolitaire.Controller
                 //if we're updating the Pack deck
                 //The Pack Deck is never face up, when sending cards to the Pack Deck they're always facedown and non-draggable
                 if (Type == DeckType.DECK_TYPE_PACK)
-                {   //reset card to facedown in the deck pack 
+                {   //reset card to facedown in the deck pack
                     card.IsDraggable = false;
-                    card.SetFaceDown();
+
+                    if (firstTime)
+                    {
+                        card.SetFaceDown(true, this);
+                    }
+
+                    else
+                    {
+                        card.SetFaceDown(false, this);
+                    }
+                    
                     //set the cards position to the Deck's position
                     card.gameObject.transform.position = gameObject.transform.position;
                     card.RestoreBackView();
@@ -172,7 +182,7 @@ namespace SimpleSolitaire.Controller
                             {
                                 card.gameObject.transform.position = gameObject.transform.position + new Vector3(_wasteHorizontalSpace, 0, 0);
                                 card.IsDraggable = true;
-                                card.SetFaceUp();                                
+                                card.SetFaceUp(false);                                
                             }
                         }
                         //if there's 3+ cards in the waste deck, shift the two other face up cards positions horizontally
@@ -182,7 +192,7 @@ namespace SimpleSolitaire.Controller
                             {
                                 card.gameObject.transform.position = gameObject.transform.position + new Vector3(2 * _wasteHorizontalSpace, 0, 0);
                                 card.IsDraggable = true;
-                                card.SetFaceUp();
+                                card.SetFaceUp(false);
                             }
                             else if (i == CardsArray.Count - 2)
                             {
@@ -207,7 +217,7 @@ namespace SimpleSolitaire.Controller
                             // --------------------------- NOT BEING CALLED IN THE WASTE DECK ------------------------------------
                         //}
 
-                        card.SetFaceUp();
+                        card.SetFaceUp(false);
 
                         if (firstTime)
                         {
@@ -222,10 +232,10 @@ namespace SimpleSolitaire.Controller
                     {
                         if (firstTime)
                         {
-                            //if initializing the bottom decks and this card is the first in the stack, set it to be facedown and not draggable. 
+                            //if initializing the bottom decks and this card isn't the first in the stack, set it to be facedown and not draggable. 
                             card.IsDraggable = false;
                             card.CardStatus = 0;
-                            card.SetFaceDown();
+                            card.SetFaceDown(firstTime, this);
                         }
                         //'Flip card facedown' aka update sprite to the card back
                         card.UpdateCardImg();

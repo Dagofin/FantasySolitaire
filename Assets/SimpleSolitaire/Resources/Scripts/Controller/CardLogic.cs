@@ -53,7 +53,7 @@ namespace SimpleSolitaire.Controller
 			InitAllDeckArray();
 			UndoPerformerComponent.ResetUndoStates();
 			ParticleStars.Stop();
-			HintManagerComponent.hintTimerCount = true;
+			
 		}
 
 		private void OnDisable()
@@ -324,6 +324,7 @@ namespace SimpleSolitaire.Controller
 			HintManagerComponent.IsHintWasUsed = false;
 			IsNeedResetPack = false;
 			faceDownCardsCount = 0;
+			//faceDownCardsCount = 52;
 			autoCompleteActive = false;
 			GameManagerComponent.RestoreInitialState();
 			RestoreInitialState();
@@ -343,6 +344,8 @@ namespace SimpleSolitaire.Controller
 			InitDeckCards();
 			SetPackDeckBg();
 			HintManagerComponent.UpdateAvailableForDragCards();
+
+			HintManagerComponent.hintTimerCount = true;
 		}
 
 		/// <summary>
@@ -391,7 +394,8 @@ namespace SimpleSolitaire.Controller
 			if(autoCompleteActive == false)
             {
 				//if (faceDownCardsCount == 0 && PackDeck.CardsArray.Count == 0 && WasteDeck.CardsArray.Count <= 1)
-				if(faceDownCardsCount == 0)
+				//if(faceDownCardsCount == 0)
+				if (faceDownCardsCount == 0 && PackDeck.CardsArray.Count == 0 && WasteDeck.CardsArray.Count <= 1)
 				{
 					//activate autocomplete button
 					autoCompleteActive = true;

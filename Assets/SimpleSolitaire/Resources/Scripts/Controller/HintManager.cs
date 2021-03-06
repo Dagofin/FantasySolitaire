@@ -26,7 +26,7 @@ namespace SimpleSolitaire.Controller
         public int CurrentHintSiblingIndex;
         public bool IsHintProcess = false;
         public bool IsHintWasUsed = false;
-        [Header("Setings:")]
+        [Header("Settings:")]
         public float DoubleTapTranslateTime = 0.25f;
         public float HintTranslateTime = 0.75f;
         public float hintTimerDefaultValue = 5.0f;
@@ -35,6 +35,9 @@ namespace SimpleSolitaire.Controller
         public GameObject hintTimerCard;
         public Deck packDeck;
         public Deck wasteDeck;
+        public GameObject hintGlow;
+        [SerializeField]
+        Vector3 hintGlowStartPos;
 
         private IEnumerator HintCoroutine;
 
@@ -77,7 +80,9 @@ namespace SimpleSolitaire.Controller
                         int hintIndex = Random.Range(0, AutoCompleteHints.Count);
                         hintTimerCard = AutoCompleteHints[hintIndex].HintCard.gameObject;
                         //-------TEMP: Change card color instead of glow effect------------------------------------
-                        hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.red;
+                        //hintTimerCard.gameObject.GetComponentInChildren<Image>().color = Color.red;
+                        hintGlow.transform.position = hintTimerCard.transform.position;
+                        hintGlow.transform.SetAsLastSibling();
 
                     }
                     /*
@@ -104,7 +109,9 @@ namespace SimpleSolitaire.Controller
                             hintTimerCard = packDeck.gameObject;
                         }
                         //-------TEMP: Change card color instead of glow effect------------------------------------
-                        hintTimerCard.GetComponentInChildren<Image>().color = Color.red;
+                        //hintTimerCard.GetComponentInChildren<Image>().color = Color.red;
+                        hintGlow.transform.position = hintTimerCard.transform.position;
+                        hintGlow.transform.SetAsLastSibling();
                     }
                 }
             }
@@ -119,7 +126,9 @@ namespace SimpleSolitaire.Controller
                 //Reset hintTimer to default value
                 hintTimer = hintTimerDefaultValue;
                 //turn off the Hint effect -----------------------------------------------------------------------
-                hintTimerCard.GetComponentInChildren<Image>().color = Color.white;
+                //hintTimerCard.GetComponentInChildren<Image>().color = Color.white;
+                hintGlow.transform.position = hintGlowStartPos;
+                
 
                 //enable the hintTimer
                 hintTimerCount = true;

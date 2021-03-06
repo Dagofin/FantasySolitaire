@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: glowy
+  m_Shader: {fileID: 4800000, guid: 52b50693f19169648ae24ce4860fddf2, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Card_shirt_01:
+        m_Texture: {fileID: 2800000, guid: c7bf45f0ef95bed4491c5809fc6bf484, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: c962556d5ce99d44aaf5e2d477db3830, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _card_BigCopy:
+        m_Texture: {fileID: 2800000, guid: 69fdc2981d472f1479b2acd0b1d13e71, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _flameBlue:
+        m_Texture: {fileID: 2800000, guid: c18e85f5ed204ce43acc008630b70172, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _glowy_mask0:
+        m_Texture: {fileID: 2800000, guid: 5d3a5d0e93a361d4085b0be74c296288, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _glowy_remap10:
+        m_Texture: {fileID: 2800000, guid: 7c098ab65a5123143a6ed7c5c4963fb0, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _glowy_remap2:
+        m_Texture: {fileID: 2800000, guid: 4900ed7aa31b0904eb80c90d36c1bda3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _glowy_remap5:
+        m_Texture: {fileID: 2800000, guid: 0a784252ff08df649b1a9efdf35b2cd8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _pngkeycomfogpng178727:
+        m_Texture: {fileID: 2800000, guid: 48691dac7fb19564583a69112ddf32db, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _smoke:
+        m_Texture: {fileID: 2800000, guid: 3a56997b82e6e2f4b9188e194bd481db, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _wave:
+        m_Texture: {fileID: 2800000, guid: fa3108da2fe38a748bfce58b4c9b5410, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _wave2:
+        m_Texture: {fileID: 2800000, guid: ba2b92c5602f6584099e57edcb4a153d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color_ROOT: {r: 1, g: 1, b: 1, a: 1}
+    - _Color_image1: {r: 1, g: 1, b: 1, a: 1}
+    - _Color_image4: {r: 1, g: 1, b: 1, a: 1}
+    - _Color_image8: {r: 0.18396229, g: 0.6117647, b: 1, a: 1}
+    - _Color_image9: {r: 0.75, g: 0.97619045, b: 1, a: 1}
+  m_BuildTextureStacks: []

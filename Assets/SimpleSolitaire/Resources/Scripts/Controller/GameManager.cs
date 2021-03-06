@@ -317,7 +317,7 @@ namespace SimpleSolitaire.Controller
 		/// </summary>
 		public void OnClickWinNewGame()
 		{
-			adsManager.ShowAd("video");
+			//adsManager.ShowAd("video");
 
 			_winLayer.GetComponent<Animator>().SetTrigger(_disappearTrigger);
 			StartCoroutine(InvokeAction(delegate
@@ -330,6 +330,8 @@ namespace SimpleSolitaire.Controller
 			_undoPerformComponent.ResetUndoStates();
 			if (StatisticsController.Instance.PlayedGames != null)
 				StatisticsController.Instance.PlayedGames.Invoke();
+
+			adsManager.ShowAd("video");
 		}
 
 		/// <summary>
@@ -357,6 +359,7 @@ namespace SimpleSolitaire.Controller
 			InitMenuView(true);
 		}
 
+		//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Start new game.
 		/// </summary>
@@ -373,6 +376,7 @@ namespace SimpleSolitaire.Controller
 				_cardLayer.SetActive(true);
 			}, 0.42f));
 		}
+		//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		/// <summary>
 		/// Continue last game.

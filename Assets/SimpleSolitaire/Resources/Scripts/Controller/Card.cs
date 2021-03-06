@@ -189,8 +189,6 @@ namespace SimpleSolitaire.Controller
         {
             CardStatus = 0;
             SetBackgroundImg(CardShirtManager.Instance.ShirtName);
-            //--------------------------------------------------------------------------------------------------------------
-            isFaceDown = true;
         }
 
         /// <summary>
@@ -263,37 +261,41 @@ namespace SimpleSolitaire.Controller
         /// <summary>
         /// Logic to track face down and face up cards
         /// </summary>
-        public void SetFaceDown()
+        public void SetFaceDown(bool firstTime, Deck deck)
         {
-            if(isFaceDown == false)
+            if (firstTime)
             {
                 isFaceDown = true;
                 CardLogicComponent.faceDownCardsCount++;
-                //print("Flip Card Down: Face Down Count is: " + CardLogicComponent.faceDownCardsCount);
+            }
+
+            else
+            {
+                if (isFaceDown == false)
+                {
+                    isFaceDown = true;
+                    CardLogicComponent.faceDownCardsCount++;
+                    //print("Flip Card Down/Deck: " + deck.transform.name + ". " + "Face Down Count is: " + CardLogicComponent.faceDownCardsCount);
+                }
+
             }
 
 
         }
-        public void SetPackDeckFaceDown()
+        public void SetFaceUp(bool firstTime)
         {
-            isFaceDown = true;
-        }
-        public void SetFaceUp()
-        {
+            //if (firstTime)
+            //{
+
+
+            //}
+
             if (isFaceDown == true)
             {
                 CardFlipAnim();
                 CardLogicComponent.faceDownCardsCount--;
-                //print("Flip Card Down: Face Down Count is: " + CardLogicComponent.faceDownCardsCount);
+                //print("Flip Card Up: Face Down Count is: " + CardLogicComponent.faceDownCardsCount);
                 isFaceDown = false;
-            }
-        }
-        public void FirstTimeFaceUp()
-        {
-            if(isFaceDown == false)
-            {
-                UpdateCardImg();
-
             }
         }
     }
