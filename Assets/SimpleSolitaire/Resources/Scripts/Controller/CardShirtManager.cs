@@ -132,15 +132,15 @@ namespace SimpleSolitaire.Controller
 				if (a.name == _name)
 				{
 					a.ActivateCheckmark();
-					animatorOfCurList.enabled = true;
-					animatorOfCurList.speed = 1f;
-					animatorOfCurList.SetTrigger(_animationActionTrigger);
+					//animatorOfCurList.enabled = true;
+					//animatorOfCurList.speed = 1f;
+					//animatorOfCurList.SetTrigger(_animationActionTrigger);
 				}
 				else
 				{
 					a.DeactivateCheckmark();
-					animatorOfCurList.enabled = false;
-					a.transform.localRotation = Quaternion.identity;
+					//animatorOfCurList.enabled = false;
+					//a.transform.localRotation = Quaternion.identity;
 				}
 			});
 		}

@@ -35,6 +35,12 @@ namespace SimpleSolitaire.Controller
             _deckWidth = _gameManagerComponent.Corners[2].x - _gameManagerComponent.Corners[0].x;
             _verticalSpace = _deckHeight / 3.5f;
             _wasteHorizontalSpace = _deckWidth / 3.0f;
+
+            print("Deck Height: " + _deckHeight);
+            print("Deck Width: " + _deckWidth);
+
+            print("Vertical Space: " + _verticalSpace);
+            print("Horizontal Space: " + _wasteHorizontalSpace);
         }
 
         /// <summary>

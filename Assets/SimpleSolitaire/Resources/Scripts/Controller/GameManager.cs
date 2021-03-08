@@ -317,8 +317,6 @@ namespace SimpleSolitaire.Controller
 		/// </summary>
 		public void OnClickWinNewGame()
 		{
-			//adsManager.ShowAd("video");
-
 			_winLayer.GetComponent<Animator>().SetTrigger(_disappearTrigger);
 			StartCoroutine(InvokeAction(delegate
 			{
