@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
+using UnityEngine.Analytics;
 using UnityEngine.UI;
 
 namespace SimpleSolitaire.Controller {
@@ -60,23 +61,27 @@ namespace SimpleSolitaire.Controller {
 
         void Update()
         {
-            if (tempNoAds == true)
+            if(permanentNoAds != true)
             {
-                noAdsTimer -= Time.deltaTime;
-
-                int seconds = (int)(noAdsTimer % 60);
-                int minutes = (int)(noAdsTimer / 60) % 60;
-
-                string noAdsTimerString = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-                tempNoAdsTimerText.text = noAdsTimerString;
-
-                //When the no ads timer expires, turn ads back on and save to AdsDAta
-                if(noAdsTimer <= 0)
+                if (tempNoAds == true)
                 {
-                     TempAdsTimerExpired();
+                    noAdsTimer -= Time.deltaTime;
+
+                    int seconds = (int)(noAdsTimer % 60);
+                    int minutes = (int)(noAdsTimer / 60) % 60;
+
+                    string noAdsTimerString = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+                    tempNoAdsTimerText.text = noAdsTimerString;
+
+                    //When the no ads timer expires, turn ads back on and save to AdsDAta
+                    if (noAdsTimer <= 0)
+                    {
+                        TempAdsTimerExpired();
+                    }
                 }
             }
+
             else
                 return;
         }
@@ -91,13 +96,24 @@ namespace SimpleSolitaire.Controller {
             else
             {
                 Advertisement.Show(p);
+                Analytics.CustomEvent("initializeAd", new Dictionary<string, object> { { "adType", p } });
             }
         }
 
         public void CheckNoAdsOnStart()
         {
+            //check if permanentNoAds is true on startup
+            if (permanentNoAds)
+            {
+                //disable the timer and button
+                PermanentDisableAds();
+
+                //set the purchased IAP option to the completed state
+
+            }
+
             //check if tempNoAds was true when the Player left the game, if so:
-            if (tempNoAds == true)
+            else if (tempNoAds == true)
             {
                 //check current DateTime against tempAdsStartTime DateTime
                 int secondsPassed = SecondsSinceTempNoAds(tempAdsStartTime, System.DateTime.Now);
@@ -110,20 +126,7 @@ namespace SimpleSolitaire.Controller {
                 //if less than 30 minutes have passed, set the timer to the appropriate time and begin counting down
                 else if(secondsPassed < 1800)
                 {
-                    //set noAdsTimer to 30 minutes
-                    noAdsTimer = noAdsDurationSeconds;
-                    //subract elapsed seconds from timer
-                    noAdsTimer = noAdsTimer - secondsPassed;
-
-                    //disable undo counter
-                    undoPerformer.IsCountable = false;
-                    undoPerformer.ActivateUndoButton();
-
-                    //toggle button/timer
-                    //disable TempDisableAdsButton
-                    tempNoAdsButton.SetActive(false);
-                    //enable TempDisabledAdsTimer
-                    tempNoAdsTimer.SetActive(true);
+                    SetTempAdsTimer(secondsPassed);
                 }
 
             }
@@ -131,6 +134,24 @@ namespace SimpleSolitaire.Controller {
             //if tempNoAds is false, then ads weren't off when the Player exited the game, no action.
             else
                 return;
+        }
+
+        public void SetTempAdsTimer(int secondsPassed)
+        {
+            //set noAdsTimer to 30 minutes
+            noAdsTimer = noAdsDurationSeconds;
+            //subract elapsed seconds from timer
+            noAdsTimer = noAdsTimer - secondsPassed;
+
+            //disable undo counter
+            undoPerformer.IsCountable = false;
+            undoPerformer.ActivateUndoButton();
+
+            //toggle button/timer
+            //disable TempDisableAdsButton
+            tempNoAdsButton.SetActive(false);
+            //enable TempDisabledAdsTimer
+            tempNoAdsTimer.SetActive(true);
         }
 
         public void TempAdsTimerExpired()
@@ -189,6 +210,13 @@ namespace SimpleSolitaire.Controller {
             SaveLoadManager.SaveAdsInfo(this);
         }
 
+        public void PermanentDisableAds()
+        {
+            //disable the timer and button
+            tempNoAdsButton.SetActive(false);
+            tempNoAdsTimer.SetActive(false);
+        }
+
         public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
         {
             //use this to check that the placement finished correctly and award stuff accordingly
@@ -221,6 +249,8 @@ namespace SimpleSolitaire.Controller {
                 }
 
             }
+
+            Analytics.CustomEvent("didAdFinish", new Dictionary<string, object> { {"adType" , placementId }, { "AdResult", showResult } });
         }
 
         public void OnUnityAdsDidError(string message)

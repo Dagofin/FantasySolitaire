@@ -2,8 +2,10 @@
 using SimpleSolitaire.Model.Enum;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Analytics;
 
 namespace SimpleSolitaire.Controller
 {
@@ -286,6 +288,17 @@ namespace SimpleSolitaire.Controller
 			if (StatisticsController.Instance.BestMoves != null)
 				StatisticsController.Instance.BestMoves.Invoke(_stepCount);
 
+			Analytics.CustomEvent("gameWon", new Dictionary<string, object> 
+			{ 
+				{ "score", score },
+				{"time", _timeLabel.text},
+				{"moves", _stepCount}
+				//undos used
+				//playerID
+				//
+			
+			});
+
 			///------------------------------------------------------------------------------------------------------------------------
 			/// ALTER - SHOW SKIPPABLE AD WHEN THE PLAYER WANTS TO START A NEW GAME AFTER WINNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			//_interVideoAdsComponent.ShowRewardBasedVideo();
@@ -326,6 +339,10 @@ namespace SimpleSolitaire.Controller
 
 			_cardLogic.Shuffle(false);
 			_undoPerformComponent.ResetUndoStates();
+
+            Analytics.CustomEvent("newGame", new Dictionary<string, object> { { "newGameSource", "Win State/New Game"} });
+
+
 			if (StatisticsController.Instance.PlayedGames != null)
 				StatisticsController.Instance.PlayedGames.Invoke();
 
@@ -370,6 +387,8 @@ namespace SimpleSolitaire.Controller
 				//_undoPerformComponent.DeleteLastGame();
 				_cardLogic.InitCardLogic();
 				_cardLogic.Shuffle(false);
+
+				Analytics.CustomEvent("newGame", new Dictionary<string, object> { { "newGameSource", "No Win State/New Session New Game" } });
 				_continueLayer.SetActive(false);
 				_cardLayer.SetActive(true);
 			}, 0.42f));
@@ -385,6 +404,8 @@ namespace SimpleSolitaire.Controller
 			StartCoroutine(InvokeAction(delegate
 			{
 				LoadGame();
+
+				Analytics.CustomEvent("newGame", new Dictionary<string, object> { { "newGameSource", "No Win State/New Session Continue Game" } });
 				_continueLayer.SetActive(false);
 				_cardLayer.SetActive(true);
 			}, 0.42f));
@@ -696,6 +717,8 @@ namespace SimpleSolitaire.Controller
 				_cardLayer.SetActive(true);
 				_cardLogic.Shuffle(false);
 				_undoPerformComponent.ResetUndoStates();
+
+				Analytics.CustomEvent("newGame", new Dictionary<string, object> { { "newGameSource", "No Win/New Game Random" } });
 			}, 0.42f));
 		}
 
@@ -718,6 +741,8 @@ namespace SimpleSolitaire.Controller
 				_cardLayer.SetActive(true);
 				_cardLogic.Shuffle(true);
 				_undoPerformComponent.ResetUndoStates();
+
+				Analytics.CustomEvent("newGame", new Dictionary<string, object> { { "newGameSource", "No Win/New Game Replay" } });
 			}, 0.42f));
 		}
 

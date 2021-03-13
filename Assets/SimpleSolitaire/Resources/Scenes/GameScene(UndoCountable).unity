@@ -10061,7 +10061,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 668540843}
         m_TargetAssemblyTypeName: SimpleSolitaire.Controller.IAPManager, Assembly-CSharp
-        m_MethodName: BuyNonConsumable
+        m_MethodName: BuyRemoveAdsAndUnlockAll
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -25652,8 +25652,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 668540843}
-        m_TargetAssemblyTypeName: IAPManager, Assembly-CSharp
-        m_MethodName: BuyNonConsumable
+        m_TargetAssemblyTypeName: SimpleSolitaire.Controller.IAPManager, Assembly-CSharp
+        m_MethodName: BuyRemoveAds
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

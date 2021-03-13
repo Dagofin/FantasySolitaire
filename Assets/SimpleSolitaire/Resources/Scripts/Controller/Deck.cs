@@ -36,11 +36,11 @@ namespace SimpleSolitaire.Controller
             _verticalSpace = _deckHeight / 3.5f;
             _wasteHorizontalSpace = _deckWidth / 3.0f;
 
-            print("Deck Height: " + _deckHeight);
-            print("Deck Width: " + _deckWidth);
+            //print("Deck Height: " + _deckHeight);
+            //print("Deck Width: " + _deckWidth);
 
-            print("Vertical Space: " + _verticalSpace);
-            print("Horizontal Space: " + _wasteHorizontalSpace);
+            //print("Vertical Space: " + _verticalSpace);
+            //print("Horizontal Space: " + _wasteHorizontalSpace);
         }
 
         /// <summary>
