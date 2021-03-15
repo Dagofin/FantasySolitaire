@@ -8,7 +8,6 @@ using UnityEngine.UI;
 namespace SimpleSolitaire.Controller {
     public class AdsManager : MonoBehaviour, IUnityAdsListener
     {
-        string placement = "rewardedVideo";
         [SerializeField]
         private UndoPerformer undoPerformer;
 
@@ -39,8 +38,6 @@ namespace SimpleSolitaire.Controller {
             Advertisement.Initialize("3921877", true);
 
             InitiateAdsData();
-
-            //Advertisement.Show(placement);
         }
 
         private void InitiateAdsData()
@@ -56,7 +53,6 @@ namespace SimpleSolitaire.Controller {
 
                 CheckNoAdsOnStart();
             }
-
         }
 
         void Update()
@@ -220,15 +216,14 @@ namespace SimpleSolitaire.Controller {
         public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
         {
             //use this to check that the placement finished correctly and award stuff accordingly
-            //example
-            //if(placementID == "addUndos")
             //check if finished, add undos
-            if (placementId == "rewardedVideo")
+            if (placementId == "refillUndos")
             {
                 if (showResult == ShowResult.Finished)
                 {
                     //add undos
                     undoPerformer.UpdateUndoCounts();
+                    adsWatched++;
                 }
                 else if (showResult == ShowResult.Failed)
                 {
@@ -242,15 +237,20 @@ namespace SimpleSolitaire.Controller {
                 {
                     //check if finished, disable ads for 30 minutes
                     TempDisableAds();
+                    adsWatched++;
                 }
                 else if(showResult == ShowResult.Failed)
                 {
                     //inform the Player they must watch the full ad to disable ads temporarily
                 }
-
             }
 
-            Analytics.CustomEvent("didAdFinish", new Dictionary<string, object> { {"adType" , placementId }, { "AdResult", showResult } });
+            else if(placementId == "newGameSkippable")
+            {
+                adsWatched++;
+            }
+            Analytics.CustomEvent("didAdFinish", new Dictionary<string, object> { { "adType", placementId }, { "AdResult", showResult }, { "playerID", AnalyticsSessionInfo.userId } });
+            SaveLoadManager.SaveAdsInfo(this);
         }
 
         public void OnUnityAdsDidError(string message)

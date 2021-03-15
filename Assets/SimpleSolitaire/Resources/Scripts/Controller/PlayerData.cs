@@ -14,8 +14,8 @@ namespace SimpleSolitaire.Controller
         public int adsWatched;
 
         //Game Data
-        public int gamesPlayed;
-        public int gamesWon;
+        //public int gamesPlayed;
+        //public int gamesWon;
 
         public PlayerData(AdsManager adsManager)
         {
@@ -24,5 +24,21 @@ namespace SimpleSolitaire.Controller
             tempAdsStartTime = adsManager.tempAdsStartTime;
             adsWatched = adsManager.adsWatched;
         }
+
+
+    }
+
+    [System.Serializable]
+    public class GameData
+    {
+        public int gamesPlayed;
+        public int gamesWon;
+
+        public GameData(GameManager gameManager)
+        {
+            gamesPlayed = gameManager.gamesPlayed;
+            gamesWon = gameManager.gamesWon;
+        }
+
     }
 }

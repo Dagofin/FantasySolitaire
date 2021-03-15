@@ -328,6 +328,9 @@ namespace SimpleSolitaire.Controller
 			autoCompleteActive = false;
 			GameManagerComponent.RestoreInitialState();
 			RestoreInitialState();
+			UndoPerformerComponent.gameUndoCount = 0;
+			GameManagerComponent.gamesPlayed++;
+			SaveLoadManager.SaveGameData(GameManagerComponent);
 
 			if (!bReplay)
 			{

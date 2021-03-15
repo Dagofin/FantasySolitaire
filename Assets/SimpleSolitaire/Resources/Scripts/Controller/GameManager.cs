@@ -37,12 +37,6 @@ namespace SimpleSolitaire.Controller
 		[SerializeField]
 		private GameObject _watchButton;
 		/*
-		[SerializeField]
-		private Text _adsInfoText;
-		[SerializeField]
-		private Text _adsDidNotLoadText;
-		[SerializeField]
-		private Text _adsClosedTooEarlyText;
 
 		public string NoAdsInfoText = "DO YOU WANNA TO DEACTIVATE ALL ADS FOR THIS GAME SESSION? JUST WATCH LAST REWARD VIDEO AND INSTALL APP. THEN ADS WON'T DISTURB YOU AGAIN!";
 		public string GetUndoAdsInfoText = "DO YOU WANNA TO GET FREE UNDO COUNTS? JUST WATCH REWARD VIDEO AND INSTALL APP. THEN UNDO WILL ADDED TO YOUR GAME SESSION!";
@@ -134,6 +128,10 @@ namespace SimpleSolitaire.Controller
 
 		private bool _soundEnable;
 
+		//GameData variables
+		public int gamesPlayed;
+		public int gamesWon;
+
 		private void Awake()
 		{
 			InitializeGame();
@@ -146,6 +144,14 @@ namespace SimpleSolitaire.Controller
 		{
 			//-------------------------------------------------------------------------------------------------------
 			//Retrieve and load info from database table
+			GameData data = SaveLoadManager.LoadGameData();
+
+			if (data != null)
+			{
+				gamesWon = data.gamesWon;
+				gamesPlayed = data.gamesPlayed;
+			}
+
 			//are ads enabled, yes or no
 			//which card backs are unlocked
 			//achievement progress
@@ -288,22 +294,19 @@ namespace SimpleSolitaire.Controller
 			if (StatisticsController.Instance.BestMoves != null)
 				StatisticsController.Instance.BestMoves.Invoke(_stepCount);
 
+			gamesWon++;
+			SaveLoadManager.SaveGameData(this);
+
 			Analytics.CustomEvent("gameWon", new Dictionary<string, object> 
 			{ 
 				{ "score", score },
 				{"time", _timeLabel.text},
-				{"moves", _stepCount}
-				//undos used
+				{"moves", _stepCount},
+				{"undos used", _undoPerformComponent.gameUndoCount}
 				//playerID
 				//
 			
 			});
-
-			///------------------------------------------------------------------------------------------------------------------------
-			/// ALTER - SHOW SKIPPABLE AD WHEN THE PLAYER WANTS TO START A NEW GAME AFTER WINNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			//_interVideoAdsComponent.ShowRewardBasedVideo();
-			//------------------------------------------------------------------------------------------------------------------------
-			//adsManager.ShowAd("video");
 		}
 
 		/// <summary>
@@ -346,7 +349,7 @@ namespace SimpleSolitaire.Controller
 			if (StatisticsController.Instance.PlayedGames != null)
 				StatisticsController.Instance.PlayedGames.Invoke();
 
-			adsManager.ShowAd("video");
+			adsManager.ShowAd("newGameSkippable");
 		}
 
 		/// <summary>
@@ -374,7 +377,6 @@ namespace SimpleSolitaire.Controller
 			InitMenuView(true);
 		}
 
-		//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		/// <summary>
 		/// Start new game.
 		/// </summary>
@@ -393,7 +395,6 @@ namespace SimpleSolitaire.Controller
 				_cardLayer.SetActive(true);
 			}, 0.42f));
 		}
-		//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 		/// <summary>
 		/// Continue last game.
@@ -423,7 +424,6 @@ namespace SimpleSolitaire.Controller
 			_exitLayer.GetComponent<Animator>().SetTrigger(_appearTrigger);
 		}
 
-		//----------------------------------ADS-------------------------------------------------------------
 		/// <summary>
 		/// Close <see cref="_adsLayer"/>.
 		/// </summary>
@@ -488,118 +488,7 @@ namespace SimpleSolitaire.Controller
 
 		//
 		#endregion
-		/*
-		#region Ads Layer
 
-		/// <summary>
-		/// Click on NoAds button. Get additional Undo Moves
-		/// </summary>
-		public void OnClickGetUndoAdsBtn()
-		{
-			_currentAdsType = RewardAdsType.GetUndo;
-			ShowAdsLayer();
-		}
-
-		/// --------------------------------------------------------------------------------------------------------
-		/// ALTER - CHANGE TO TIME BASED AD DEACTIVATION, 
-		/// <summary>
-		/// Click on NoAds button. Turn off ads for the entire session
-		/// </summary>
-		public void OnClickNoAdsBtn()
-		{
-			_currentAdsType = RewardAdsType.NoAds;
-			ShowAdsLayer();
-		}
-
-		/// <summary>
-		/// Appearing ads layer with information about ads type.
-		/// </summary>
-		private void ShowAdsLayer()
-		{
-			UpdateAdsInfoText(_currentAdsType);
-
-			_cardLayer.SetActive(false);
-			_adsLayer.SetActive(true);
-			_adsInfoText.enabled = true;
-			_adsDidNotLoadText.enabled = false;
-			_adsClosedTooEarlyText.enabled = false;
-			_watchButton.SetActive(true);
-			_adsLayer.GetComponent<Animator>().SetTrigger(_appearTrigger);
-		}
-
-		/// <summary>
-		/// Close <see cref="_adsLayer"/>.
-		/// </summary>
-		public void OnClickAdsCloseBtn()
-		{
-			_adsLayer.GetComponent<Animator>().SetTrigger(_disappearTrigger);
-			StartCoroutine(InvokeAction(delegate
-			{
-				_adsLayer.SetActive(false);
-				_cardLayer.SetActive(true);
-			}, 0.42f));
-		}
-
-		/// <summary>
-		/// Close <see cref="_adsLayer"/>.
-		/// </summary>
-		public void OnWatchAdsBtnClick()
-		{
-			switch (_currentAdsType)
-			{
-				case RewardAdsType.GetUndo:
-					_interVideoAdsComponent.ShowGetUndoAction();
-					break;
-				case RewardAdsType.NoAds:
-					_interVideoAdsComponent.NoAdsAction();
-					break;
-			}
-		}
-
-		/// <summary>
-		/// Call result of watched reward video.
-		/// </summary>
-		public void OnRewardActionState(RewardAdsState state, RewardAdsType type)
-		{
-			_adsLayer.GetComponent<Animator>().SetTrigger(_disappearTrigger);
-			bool infoText = false;
-			bool closedText = false;
-			bool notLoadedText = false;
-			switch (state)
-			{
-				case RewardAdsState.TOO_EARLY_CLOSE:
-					closedText = true;
-					break;
-				case RewardAdsState.DID_NOT_LOADED:
-					notLoadedText = true;
-					break;
-			}
-			StartCoroutine(InvokeAction(delegate
-			{
-				_adsLayer.SetActive(true);
-				_adsInfoText.enabled = infoText;
-				_adsDidNotLoadText.enabled = notLoadedText;
-				_adsClosedTooEarlyText.enabled = closedText;
-				_watchButton.SetActive(false);
-				_cardLayer.SetActive(false);
-				_adsLayer.GetComponent<Animator>().SetTrigger(_appearTrigger);
-			}, 0.42f));
-		}
-
-		public void UpdateAdsInfoText(RewardAdsType type)
-		{
-			switch (type)
-			{
-				case RewardAdsType.NoAds:
-					_adsInfoText.text = NoAdsInfoText;
-					break;
-				case RewardAdsType.GetUndo:
-					_adsInfoText.text = GetUndoAdsInfoText;
-					break;
-			}
-		}
-		#endregion
-		*/
 		#region Rule Layer
 		/// <summary>
 		/// Click on rule button.
@@ -703,7 +592,7 @@ namespace SimpleSolitaire.Controller
 		/// </summary>
 		public void OnClickModalRandom()
 		{
-			adsManager.ShowAd("video");
+			adsManager.ShowAd("newGameSkippable");
 
 			_gameLayer.GetComponent<Animator>().SetTrigger(_disappearTrigger);
 			StartCoroutine(InvokeAction(delegate
@@ -727,7 +616,7 @@ namespace SimpleSolitaire.Controller
 		/// </summary>
 		public void OnClickModalReplay()
 		{
-			adsManager.ShowAd("video");
+			adsManager.ShowAd("newGameSkippable");
 
 			_gameLayer.GetComponent<Animator>().SetTrigger(_disappearTrigger);
 			StartCoroutine(InvokeAction(delegate

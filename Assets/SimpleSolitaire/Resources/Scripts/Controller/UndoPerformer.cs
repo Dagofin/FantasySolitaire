@@ -34,6 +34,8 @@ namespace SimpleSolitaire.Controller
 
 		private int _availableUndoCounts = 0;
 
+		public int gameUndoCount = 0;
+
 		private readonly string _lastGameKey = "LastGameKey";
 		private readonly string _undoBtnAnimationKey = "IsAnimate";
 
@@ -47,6 +49,7 @@ namespace SimpleSolitaire.Controller
 				if (IsCountable && _availableUndoCounts > 0)
 				{
 					_availableUndoCounts--;
+					gameUndoCount++;
 					_undoAvailableCountsText.text = _availableUndoCounts.ToString();
 				}
 				else if (IsCountable && _availableUndoCounts == 0)
@@ -57,7 +60,7 @@ namespace SimpleSolitaire.Controller
 					if(_adsComponent.adsActive == true)
                     {
 
-						_adsComponent.ShowAd("rewardedVideo");
+						_adsComponent.ShowAd("refillUndos");
 
 						return;
 					}

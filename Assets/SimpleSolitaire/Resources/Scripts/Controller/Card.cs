@@ -156,7 +156,7 @@ namespace SimpleSolitaire.Controller
                     return;
                 }
                 Deck.OnPointerClick(eventData);
-                UnityEngine.Debug.Log("Clicked on Deck");
+                //UnityEngine.Debug.Log("Clicked on Deck");
             }
             //if the card is in the card stacks
             else

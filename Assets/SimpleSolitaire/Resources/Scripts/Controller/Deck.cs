@@ -231,7 +231,9 @@ namespace SimpleSolitaire.Controller
                             //card.FirstTimeFaceUp();
                         }
                         //card.SetFaceUp();
-                        card.UpdateCardImg();
+                        //WHY WAS THIS HERE ----------------------------------------------------------------
+                        //card.UpdateCardImg();
+                        //----------------------------------------------------------------------------------
                     }
                     //if this Card is any card but the first/top card in the deck
                     else
