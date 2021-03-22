@@ -20,10 +20,15 @@ namespace SimpleSolitaire.Controller
 		[SerializeField]
 		private GameManager gameManager;
 
+        public void Awake()
+        {
+			myAnimator = GetComponent<Animator>();
+		}
+
         public void Start()
         {
 			CheckUnlockAtStart(gameManager.playerLevel);
-			myAnimator = GetComponent<Animator>();
+			
         }
 
 		public void CheckUnlockAtStart(int playerLevel)
@@ -46,7 +51,6 @@ namespace SimpleSolitaire.Controller
 			LockedTile.SetActive(false);
 			//change animation state to idle
 			myAnimator.Play("CurrentShirt");
-			//myAnimator.enabled = false;
         }
 
 		public void Lock()
