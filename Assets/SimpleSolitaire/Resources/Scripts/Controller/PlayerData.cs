@@ -33,11 +33,15 @@ namespace SimpleSolitaire.Controller
     {
         public int gamesPlayed;
         public int gamesWon;
+        public int playerLevel;
+        public int playerXP;
 
         public GameData(GameManager gameManager)
         {
             gamesPlayed = gameManager.gamesPlayed;
             gamesWon = gameManager.gamesWon;
+            playerLevel = gameManager.playerLevel;
+            playerXP = gameManager.playerXP;
         }
 
     }

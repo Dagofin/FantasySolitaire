@@ -70,7 +70,7 @@ namespace SimpleSolitaire.Controller
 
 		private void Start()
 		{
-			SetShirtForCards(ShirtsImage.Find(x => x.name == ShirtName).VisualImage);
+			SetShirtForCardsOnStart(ShirtsImage.Find(x => x.name == ShirtName).VisualImage);
 			SetBackGround(BackGroundImages.Find(y => y.name == BackGroundName).VisualImage);
 		}
 
@@ -105,6 +105,40 @@ namespace SimpleSolitaire.Controller
 		public void SetShirtForCards(Image shirtObject)
 		{
 			CurrentShirt = shirtObject.gameObject;
+			VisualiseElement cardScript = CurrentShirt.GetComponent<VisualiseElement>();
+			
+			//if the Player has unlocked the card, let them select it
+			if (cardScript.isUnlocked == true)
+            {
+				ShirtName = CurrentShirt.name;
+				PlayerPrefs.SetString(CURRENT_SHIRT, ShirtName);
+
+				ActionWithAnimationForObjects(ShirtsImage, ShirtName, 10f);
+
+				foreach (var item in CLComponent.CardsArray)
+				{
+					item.BackgroundImage.sprite = shirtObject.sprite;
+					item.UpdateCardImg();
+				}
+			}
+            else
+            {
+				//tooltip for level up to unlock
+            }
+
+		}
+
+		/// <summary>
+		/// Set up shirt for card objects.
+		/// </summary>
+		/// <param name="shirtObject">Shirt image component.</param>
+		public void SetShirtForCardsOnStart(Image shirtObject)
+		{
+			CurrentShirt = shirtObject.gameObject;
+			VisualiseElement cardScript = CurrentShirt.GetComponent<VisualiseElement>();
+
+			//if this is being called from Start, set the cards properly
+
 			ShirtName = CurrentShirt.name;
 			PlayerPrefs.SetString(CURRENT_SHIRT, ShirtName);
 
@@ -144,6 +178,18 @@ namespace SimpleSolitaire.Controller
 				}
 			});
 		}
+
+		public void CardBackLevelUpCheck(int playerLevel)
+        {
+			for(int i =0; i<ShirtsImage.Count; i++)
+            {
+                if (ShirtsImage[i].unlockedAtLevel == playerLevel)
+                {
+					ShirtsImage[i].Unlock(true);
+                }
+            }
+
+        }
 
 		/// <summary>
 		/// Get animator of object.

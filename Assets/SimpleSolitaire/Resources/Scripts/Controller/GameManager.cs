@@ -52,6 +52,8 @@ namespace SimpleSolitaire.Controller
 		private UndoPerformer _undoPerformComponent;
 		[SerializeField]
 		private TutorialManager _tutorialComponent;
+		[SerializeField]
+		private CardShirtManager _cardShirtManager;
 
 		[Header("Layers:")]
 		[SerializeField]
@@ -131,6 +133,11 @@ namespace SimpleSolitaire.Controller
 		//GameData variables
 		public int gamesPlayed;
 		public int gamesWon;
+		public int playerLevel = 1;
+		public int playerXP;
+
+		[SerializeField]
+		private int winXP = 150;
 
 		private void Awake()
 		{
@@ -150,6 +157,8 @@ namespace SimpleSolitaire.Controller
 			{
 				gamesWon = data.gamesWon;
 				gamesPlayed = data.gamesPlayed;
+				playerLevel = data.playerLevel;
+				playerXP = data.playerXP;
 			}
 
 			//are ads enabled, yes or no
@@ -293,6 +302,18 @@ namespace SimpleSolitaire.Controller
 				StatisticsController.Instance.BestTime.Invoke(_timeCount);
 			if (StatisticsController.Instance.BestMoves != null)
 				StatisticsController.Instance.BestMoves.Invoke(_stepCount);
+
+			//add winXP to playerXP
+			playerXP = playerXP + winXP;
+            //check to see if the Player has level up
+            if (playerXP >= 150) //change to read from level up table
+            {
+				playerLevel++;
+				//reset XP
+				playerXP = playerXP - 150; //change to read from level up table
+				//send check to unlock new card backs and backgrounds
+				_cardShirtManager.CardBackLevelUpCheck(playerLevel);
+			}
 
 			gamesWon++;
 			SaveLoadManager.SaveGameData(this);
