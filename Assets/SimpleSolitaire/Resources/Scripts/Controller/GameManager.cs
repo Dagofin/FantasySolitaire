@@ -136,8 +136,12 @@ namespace SimpleSolitaire.Controller
 		public int playerLevel = 1;
 		public int playerXP;
 
+		public int maximumXP;
+
 		[SerializeField]
 		private int winXP = 150;
+		public XPBar winDialogXPBar;
+		public XPBar settingsXPBar;
 
 		private void Awake()
 		{
@@ -160,6 +164,14 @@ namespace SimpleSolitaire.Controller
 				playerLevel = data.playerLevel;
 				playerXP = data.playerXP;
 			}
+
+			//set the Player's current XP
+			//winDialogXPBar.currentXP = playerXP;
+			//winDialogXPBar.levelText.text = playerLevel.ToString();
+			//winDialogXPBar.GetCurrentFill(playerXP);
+			winDialogXPBar.InitializeLevelData(playerXP, 300, playerLevel); //150 is temp, will replace with level up xp value from a level up table
+			//------------------------------------------------------------------------------------------------------------------------------------------------
+			//settingsXPBar.InitializeLevelData(playerXP, 150, playerLevel);
 
 			//are ads enabled, yes or no
 			//which card backs are unlocked
@@ -303,17 +315,12 @@ namespace SimpleSolitaire.Controller
 			if (StatisticsController.Instance.BestMoves != null)
 				StatisticsController.Instance.BestMoves.Invoke(_stepCount);
 
+
 			//add winXP to playerXP
-			playerXP = playerXP + winXP;
-            //check to see if the Player has level up
-            if (playerXP >= 150) //change to read from level up table
-            {
-				playerLevel++;
-				//reset XP
-				playerXP = playerXP - 150; //change to read from level up table
-				//send check to unlock new card backs and backgrounds
-				_cardShirtManager.CardBackLevelUpCheck(playerLevel);
-			}
+			//TEMP----------------------------------------------------------------------------------------------------------------------------
+			//change winXP to the player's score
+			StartCoroutine(HandleXPOnWin(winXP));
+
 
 			gamesWon++;
 			SaveLoadManager.SaveGameData(this);
@@ -329,6 +336,42 @@ namespace SimpleSolitaire.Controller
 			
 			});
 		}
+
+		private IEnumerator HandleXPOnWin(int tempWinXP)
+        {
+			int targetXP = tempWinXP + playerXP;
+			print("targetXP = " + targetXP);
+
+			//if the targetXP is greater than the maximumXP, the Player has earned a level up
+			if(targetXP >= maximumXP)
+			{
+				print("start Level Up animation");
+				//animate the XP Bar from playerXP to the maximumXP
+				yield return StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, maximumXP, 4.0f));
+				//increase the Player's level
+				playerLevel++;
+				//play level up celebration animation
+				//ADD--------------------------------------------------------------------------------------------------------------------------
+				//check any card back/background unlocks
+				_cardShirtManager.CardBackLevelUpCheck(playerLevel);
+				//subract the XP consumed by the level up from the targetXP
+				int xpLevelUpRemainder = targetXP - maximumXP;
+				//animate the xp bar from zero to the xpLevelUpRemainder value
+				StartCoroutine(winDialogXPBar.AnimateXPBar(0, xpLevelUpRemainder, 1.0f));
+
+				//Set XP to remaining if anything
+				playerXP = xpLevelUpRemainder;
+			}
+			//the Player hasn't earned a level up, just add the XP normally
+			else
+			{
+				print("Start XP Count up animation");
+				StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, targetXP, 4.0f));
+				playerXP = targetXP;
+			}
+        }
+
+
 
 		/// <summary>
 		/// Save to prefs best score if it need :)

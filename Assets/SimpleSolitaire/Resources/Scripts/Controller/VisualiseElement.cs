@@ -14,7 +14,7 @@ namespace SimpleSolitaire.Controller
 		public int unlockedAtLevel;
 		public bool isUnlocked;
 		
-		//[SerializeField]
+		[SerializeField]
 		private Animator myAnimator;
 
 		[SerializeField]
@@ -22,12 +22,13 @@ namespace SimpleSolitaire.Controller
 
         public void Awake()
         {
-			myAnimator = GetComponent<Animator>();
+			//myAnimator = GetComponent<Animator>();
+			CheckUnlockAtStart(gameManager.playerLevel);
 		}
 
         public void Start()
         {
-			CheckUnlockAtStart(gameManager.playerLevel);
+			
 			
         }
 
