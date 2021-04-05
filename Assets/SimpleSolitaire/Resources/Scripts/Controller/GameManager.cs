@@ -166,12 +166,8 @@ namespace SimpleSolitaire.Controller
 			}
 
 			//set the Player's current XP
-			//winDialogXPBar.currentXP = playerXP;
-			//winDialogXPBar.levelText.text = playerLevel.ToString();
-			//winDialogXPBar.GetCurrentFill(playerXP);
-			winDialogXPBar.InitializeLevelData(playerXP, 300, playerLevel); //150 is temp, will replace with level up xp value from a level up table
-			//------------------------------------------------------------------------------------------------------------------------------------------------
-			//settingsXPBar.InitializeLevelData(playerXP, 150, playerLevel);
+			winDialogXPBar.InitializeLevelData(playerXP, maximumXP, playerLevel);
+			settingsXPBar.InitializeLevelData(playerXP, maximumXP, playerLevel);
 
 			//are ads enabled, yes or no
 			//which card backs are unlocked
@@ -323,6 +319,7 @@ namespace SimpleSolitaire.Controller
 
 
 			gamesWon++;
+
 			SaveLoadManager.SaveGameData(this);
 
 			Analytics.CustomEvent("gameWon", new Dictionary<string, object> 
@@ -347,17 +344,18 @@ namespace SimpleSolitaire.Controller
 			{
 				print("start Level Up animation");
 				//animate the XP Bar from playerXP to the maximumXP
-				yield return StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, maximumXP, 4.0f));
+				yield return StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, maximumXP, 1.5f));
 				//increase the Player's level
 				playerLevel++;
 				//play level up celebration animation
+				winDialogXPBar.LevelUp(playerLevel);
 				//ADD--------------------------------------------------------------------------------------------------------------------------
 				//check any card back/background unlocks
 				_cardShirtManager.CardBackLevelUpCheck(playerLevel);
 				//subract the XP consumed by the level up from the targetXP
 				int xpLevelUpRemainder = targetXP - maximumXP;
 				//animate the xp bar from zero to the xpLevelUpRemainder value
-				StartCoroutine(winDialogXPBar.AnimateXPBar(0, xpLevelUpRemainder, 1.0f));
+				StartCoroutine(winDialogXPBar.AnimateXPBar(0, xpLevelUpRemainder, 3.5f));
 
 				//Set XP to remaining if anything
 				playerXP = xpLevelUpRemainder;
@@ -369,6 +367,8 @@ namespace SimpleSolitaire.Controller
 				StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, targetXP, 4.0f));
 				playerXP = targetXP;
 			}
+
+			settingsXPBar.InitializeLevelData(playerXP, maximumXP, playerLevel);
         }
 
 

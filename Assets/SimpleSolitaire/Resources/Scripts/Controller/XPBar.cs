@@ -16,6 +16,12 @@ namespace SimpleSolitaire
         public Image mask;
         //public Image fill;
         //public Color color;
+        [SerializeField]
+        private Text levelUpDialogText;
+        [SerializeField]
+        private Animator levelUpAnim;
+        [SerializeField]
+        private GameObject levelUpAnimObj;
 
         public Text currentXPText;
         public Text levelText;
@@ -23,6 +29,15 @@ namespace SimpleSolitaire
         //lerp variables
         float lerpDuration = 2;
         float valueToLerp;
+
+        public void Awake()
+        {
+            if(levelUpAnimObj!= null)
+            {
+                levelUpAnimObj.SetActive(false);
+            }
+
+        }
 
         public void InitializeLevelData(int setXP, int setMaxXP, int setLevel)
         {
@@ -127,6 +142,25 @@ namespace SimpleSolitaire
             
             //safety check to set the bar/text to the correct ending value
             GetCurrentFill(endXP);
+        }
+
+        public void LevelUp(int tempLevelText)
+        {
+            currentLevel = tempLevelText;
+            
+
+            levelUpDialogText.text = currentLevel.ToString();
+            //play level up dialog animation
+            levelUpAnimObj.SetActive(true);
+            levelUpAnim.SetBool("playLevelUp", true);
+            //levelUpAnim.Play("LevelUp");
+
+            levelText.text = currentLevel.ToString();
+        }
+
+        public void KillLevelUpAnim()
+        {
+            levelUpAnimObj.SetActive(false);
         }
 
     }
