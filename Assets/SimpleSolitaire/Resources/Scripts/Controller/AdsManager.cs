@@ -87,6 +87,11 @@ namespace SimpleSolitaire.Controller {
             //if (adsActive == true)
             if(permanentNoAds == true || tempNoAds == true)
             {
+                if(p == "refillUndos")
+                {
+                    undoPerformer.UpdateUndoCounts();
+                }
+
                 return;
             }
             else
@@ -103,6 +108,7 @@ namespace SimpleSolitaire.Controller {
             {
                 //disable the timer and button
                 PermanentDisableAds();
+                
 
                 //set the purchased IAP option to the completed state
 

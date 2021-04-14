@@ -142,6 +142,9 @@ namespace SimpleSolitaire.Controller
 		private int winXP = 150;
 		public XPBar winDialogXPBar;
 		public XPBar settingsXPBar;
+		private static readonly int[] maxXPPerLevel = new[] {4000, 10000, 10000, 10000, 10000, 10000, 15000, 15000, 15000, 15000, 15000, 20000, 20000, 20000, 20000, 20000, 25000};
+		[SerializeField]
+		private int maxXPLevel15;
 
 		private void Awake()
 		{
@@ -164,6 +167,8 @@ namespace SimpleSolitaire.Controller
 				playerLevel = data.playerLevel;
 				playerXP = data.playerXP;
 			}
+
+			maximumXP = GetXPToNextLevel(playerLevel);
 
 			//set the Player's current XP
 			winDialogXPBar.InitializeLevelData(playerXP, maximumXP, playerLevel);
@@ -291,7 +296,7 @@ namespace SimpleSolitaire.Controller
 			_congratManagerComponent.CongratulationTextFill();
 			var score = _scoreCount + Public.SCORE_NUMBER / _timeCount;
 			_timeWinLabel.text = "YOUR TIME: " + _timeLabel.text;
-			_scoreWinLabel.text = "YOUR SCORE: " + score;
+			_scoreWinLabel.text = score.ToString();
 			_stepsWinLabel.text = "YOUR MOVES: " + _stepCount;
 			PlayGameAudio(SoundType.AUDIO_TYPE_WIN);
 			SetBestValuesToPrefs(score);
@@ -315,7 +320,7 @@ namespace SimpleSolitaire.Controller
 			//add winXP to playerXP
 			//TEMP----------------------------------------------------------------------------------------------------------------------------
 			//change winXP to the player's score
-			StartCoroutine(HandleXPOnWin(winXP));
+			StartCoroutine(HandleXPOnWin(score));
 
 
 			gamesWon++;
@@ -337,18 +342,19 @@ namespace SimpleSolitaire.Controller
 		private IEnumerator HandleXPOnWin(int tempWinXP)
         {
 			int targetXP = tempWinXP + playerXP;
-			print("targetXP = " + targetXP);
 
 			//if the targetXP is greater than the maximumXP, the Player has earned a level up
 			if(targetXP >= maximumXP)
 			{
-				print("start Level Up animation");
 				//animate the XP Bar from playerXP to the maximumXP
 				yield return StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, maximumXP, 1.5f));
 				//increase the Player's level
 				playerLevel++;
+				//set the new maximu
+				maximumXP = GetXPToNextLevel(playerLevel);
 				//play level up celebration animation
 				winDialogXPBar.LevelUp(playerLevel);
+				winDialogXPBar.InitializeLevelData(playerXP, maximumXP, playerLevel);
 				//ADD--------------------------------------------------------------------------------------------------------------------------
 				//check any card back/background unlocks
 				_cardShirtManager.CardBackLevelUpCheck(playerLevel);
@@ -363,12 +369,22 @@ namespace SimpleSolitaire.Controller
 			//the Player hasn't earned a level up, just add the XP normally
 			else
 			{
-				print("Start XP Count up animation");
-				StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, targetXP, 4.0f));
+				StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, targetXP, 1.5f));
 				playerXP = targetXP;
 			}
 
 			settingsXPBar.InitializeLevelData(playerXP, maximumXP, playerLevel);
+        }
+
+		public int GetXPToNextLevel(int level)
+        {
+			if (level < maxXPPerLevel.Length)
+			{
+				return maxXPPerLevel[level];
+			}
+			else
+				return maxXPLevel15;
+			
         }
 
 

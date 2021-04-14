@@ -46,12 +46,14 @@ namespace SimpleSolitaire.Controller
 		{
 			if (StatesData.States.Count > 0)
 			{
+				//if undos are countable and there are undos to be used, subtract the undo and update the text
 				if (IsCountable && _availableUndoCounts > 0)
 				{
 					_availableUndoCounts--;
 					gameUndoCount++;
 					_undoAvailableCountsText.text = _availableUndoCounts.ToString();
 				}
+				//else if undos are countable and there are no remaining undos, trigger an ad to reset the undo count
 				else if (IsCountable && _availableUndoCounts == 0)
 				{
 					//_gameMgrComponent.OnClickGetUndoAdsBtn();
@@ -74,10 +76,14 @@ namespace SimpleSolitaire.Controller
 				_hintComponent.IsHintWasUsed = false;
 				_cardLogicComponent.IsNeedResetPack = false;
 
+				//go through each card in the alldeckarray(master of all cards)
 				for (int i = 0; i < _cardLogicComponent.AllDeckArray.Length; i++)
 				{
+					//assign deck to the all deck array, so all cards
 					Deck deck = _cardLogicComponent.AllDeckArray[i];
+					//assign the deck record to the current state -1, so the previous state
 					DeckRecord deckRecord = StatesData.States[StatesData.States.Count - 1].DecksRecord[i];
+					//assign deck's card list to the deckRecord cards list of the previous state
 					deck.CardsArray = new List<Card>(deckRecord.Cards);
 
 					for (int j = 0; j < deckRecord.CardsRecord.Count; j++)
@@ -95,6 +101,7 @@ namespace SimpleSolitaire.Controller
 						card.Deck = cardRecord.Deck;
 						card.transform.localPosition = cardRecord.Position;
 						card.transform.SetSiblingIndex(cardRecord.SiblingIndex);
+						card.isFaceDown = cardRecord.IsFaceDown;
 					}
 					deck.UpdateCardsPosition(false);
 				}

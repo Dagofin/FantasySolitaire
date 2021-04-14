@@ -8,8 +8,8 @@ namespace SimpleSolitaire
 {
     public class XPBar : MonoBehaviour
     {
-        [SerializeField]
-        private int maximumXP;
+        
+        public int maximumXP;
         public int currentXP;
         public int currentLevel;
         public int xpToAdd;
@@ -27,7 +27,7 @@ namespace SimpleSolitaire
         public Text levelText;
 
         //lerp variables
-        float lerpDuration = 2;
+        float lerpDuration = 1;
         float valueToLerp;
 
         public void Awake()
