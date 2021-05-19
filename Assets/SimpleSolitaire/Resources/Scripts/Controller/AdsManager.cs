@@ -17,6 +17,7 @@ namespace SimpleSolitaire.Controller {
         private GameObject tempNoAdsTimer;
         [SerializeField]
         private Text tempNoAdsTimerText;
+        
 
         //Ads Data
         public bool permanentNoAds;
@@ -24,11 +25,17 @@ namespace SimpleSolitaire.Controller {
         public System.DateTime tempAdsStartTime;
         public float noAdsDurationSeconds = 1800f;
         public int adsWatched;
+        private int doubleXPScore;
+        public Button doubleXPButton;
 
         [SerializeField]
         private float noAdsTimer = 0f;
 
         public bool adsActive = true;
+
+        [SerializeField]
+        private GameManager gameManager;
+
 
 
         // Start is called before the first frame update
@@ -219,6 +226,12 @@ namespace SimpleSolitaire.Controller {
             tempNoAdsTimer.SetActive(false);
         }
 
+        public void DoubleXP(Text tempScore)
+        {
+            doubleXPScore = int.Parse(tempScore.text);
+            ShowAd("doubleXP");
+        }
+
         public void OnUnityAdsDidFinish(string placementId, ShowResult showResult)
         {
             //use this to check that the placement finished correctly and award stuff accordingly
@@ -255,6 +268,21 @@ namespace SimpleSolitaire.Controller {
             {
                 adsWatched++;
             }
+
+            else if(placementId == "doubleXP")
+            {
+
+                if (showResult == ShowResult.Finished)
+                {
+                    //repeat XP gain sequence with same XP
+                    //gameManager.StartCoroutine(HandleXPOnWin(score));
+                    StartCoroutine(gameManager.HandleXPOnWin(doubleXPScore));
+                    doubleXPButton.gameObject.SetActive(false);
+
+                    adsWatched++;
+                }
+            }
+
             Analytics.CustomEvent("didAdFinish", new Dictionary<string, object> { { "adType", placementId }, { "AdResult", showResult }, { "playerID", AnalyticsSessionInfo.userId } });
             SaveLoadManager.SaveAdsInfo(this);
         }

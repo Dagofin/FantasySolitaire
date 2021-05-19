@@ -9,8 +9,11 @@ namespace SimpleSolitaire.Controller
 {
     public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
+        //Suit Info
         public int CardType = 0;
+        //Card Number
         public int CardNumber = 0;
+        //
         public int Number = 0;
         public int CardStatus = 0;
         public int CardColor = 0;
@@ -179,6 +182,7 @@ namespace SimpleSolitaire.Controller
             {
                 texture = GetTypeName() + Number;
             }
+            //print(texture);
             return texture;
         }
 

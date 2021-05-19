@@ -291,6 +291,7 @@ namespace SimpleSolitaire.Controller
 		{
 			_cardLayer.SetActive(false);
 			_winLayer.SetActive(true);
+			adsManager.doubleXPButton.gameObject.SetActive(true);
 
 			StopGameTimer();
 			_congratManagerComponent.CongratulationTextFill();
@@ -339,27 +340,29 @@ namespace SimpleSolitaire.Controller
 			});
 		}
 
-		private IEnumerator HandleXPOnWin(int tempWinXP)
+		public IEnumerator HandleXPOnWin(int tempWinXP)
         {
 			int targetXP = tempWinXP + playerXP;
 
 			//if the targetXP is greater than the maximumXP, the Player has earned a level up
 			if(targetXP >= maximumXP)
 			{
+				//print("Level Up Sequence: TargetXP " + targetXP);
 				//animate the XP Bar from playerXP to the maximumXP
-				yield return StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, maximumXP, 1.5f));
+				yield return StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, maximumXP, 1.0f));
 				//increase the Player's level
 				playerLevel++;
-				//set the new maximu
-				maximumXP = GetXPToNextLevel(playerLevel);
+				//subract the XP consumed by the level up from the targetXP
+				int xpLevelUpRemainder = targetXP - maximumXP;
 				//play level up celebration animation
 				winDialogXPBar.LevelUp(playerLevel);
-				winDialogXPBar.InitializeLevelData(playerXP, maximumXP, playerLevel);
 				//ADD--------------------------------------------------------------------------------------------------------------------------
 				//check any card back/background unlocks
 				_cardShirtManager.CardBackLevelUpCheck(playerLevel);
-				//subract the XP consumed by the level up from the targetXP
-				int xpLevelUpRemainder = targetXP - maximumXP;
+				//set the new maximumXP
+				maximumXP = GetXPToNextLevel(playerLevel);
+				//
+				winDialogXPBar.InitializeLevelData(0, maximumXP, playerLevel);
 				//animate the xp bar from zero to the xpLevelUpRemainder value
 				StartCoroutine(winDialogXPBar.AnimateXPBar(0, xpLevelUpRemainder, 3.5f));
 
@@ -369,7 +372,7 @@ namespace SimpleSolitaire.Controller
 			//the Player hasn't earned a level up, just add the XP normally
 			else
 			{
-				StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, targetXP, 1.5f));
+				StartCoroutine(winDialogXPBar.AnimateXPBar(playerXP, targetXP, 1.0f));
 				playerXP = targetXP;
 			}
 

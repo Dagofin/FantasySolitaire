@@ -79,6 +79,8 @@ namespace SimpleSolitaire.Controller
 				//go through each card in the alldeckarray(master of all cards)
 				for (int i = 0; i < _cardLogicComponent.AllDeckArray.Length; i++)
 				{
+					//_cardLogicComponent.faceDownCardsCount = 0;
+
 					//assign deck to the all deck array, so all cards
 					Deck deck = _cardLogicComponent.AllDeckArray[i];
 					//assign the deck record to the current state -1, so the previous state
@@ -102,10 +104,27 @@ namespace SimpleSolitaire.Controller
 						card.transform.localPosition = cardRecord.Position;
 						card.transform.SetSiblingIndex(cardRecord.SiblingIndex);
 						card.isFaceDown = cardRecord.IsFaceDown;
+
+						//if (card.isFaceDown == true)
+						//{
+						//	_cardLogicComponent.faceDownCardsCount++;
+						//}
+						
 					}
+					//_cardLogicComponent.faceDownCardsCount =  deckRecord.faceDownCardsCount;
+
 					deck.UpdateCardsPosition(false);
 				}
 
+				_cardLogicComponent.faceDownCardsCount = 0;
+				for (int k = 0; k < _cardLogicComponent.CardsArray.Length; k++)
+				{
+					Card card = _cardLogicComponent.CardsArray[k];
+					if(card.isFaceDown == true)
+                    {
+						_cardLogicComponent.faceDownCardsCount++;
+                    }
+				}
 				_hintComponent.UpdateAvailableForDragCards();
 				_cardLogicComponent.GameManagerComponent.CardMove();
 				StatesData.States.RemoveAt(StatesData.States.Count - 1);
@@ -238,11 +257,15 @@ namespace SimpleSolitaire.Controller
 								card.transform.localPosition = cardRecord.Position;
 								card.transform.SetSiblingIndex(cardRecord.SiblingIndex);
 
+								//TEMP ----------------------------------------------------------------------------------------------------------
 								if(card.isFaceDown == true)
                                 {
 									_cardLogicComponent.faceDownCardsCount++;
                                 }
+								//----------------------------------------------------------------------------------------------------------------
 							}
+							//PERMANENT ------------------------------------------------------------------------------------------------------------
+							//_cardLogicComponent.faceDownCardsCount = deckRecord.faceDownCardsCount;
 						}
 						deck.UpdateCardsPosition(false);
 						//deck.UpdateCardsPosition(true);
@@ -315,6 +338,7 @@ namespace SimpleSolitaire.Controller
 			foreach (var deck in decksStates)
 			{
 				DecksRecord.Add(new DeckRecord(deck.CardsArray));
+				
 			}
 		}
 	}
@@ -356,9 +380,11 @@ namespace SimpleSolitaire.Controller
 	{
 		public List<Card> Cards = new List<Card>();
 		public List<CardRecord> CardsRecord = new List<CardRecord>();
+		public int faceDownCardsCount;
 
 		public DeckRecord(List<Card> cards)
 		{
+			
 			Cards = new List<Card>(cards);
 
 			foreach (var item in cards)
@@ -366,5 +392,10 @@ namespace SimpleSolitaire.Controller
 				CardsRecord.Add(new CardRecord(item));
 			}
 		}
+
+		public DeckRecord(CardLogic cardLogic)
+        {
+			faceDownCardsCount = cardLogic.faceDownCardsCount;
+        }
 	}
 }

@@ -174,8 +174,18 @@ namespace SimpleSolitaire.Controller
                         card.gameObject.transform.position = gameObject.transform.position;
                         //card.gameObject.transform.rotation = Quaternion.Euler(gameObject.transform.rotation.eulerAngles);
                     }
+
+                    else if(Type == DeckType.DECK_TYPE_WASTE)
+                    {
+                        //restack the cards directly on top of each other
+                        card.IsDraggable = false;
+                        //card.SetFaceDown(false, this);
+
+                        card.gameObject.transform.position = gameObject.transform.position;
+                    }
+
                     //if we're updating the Waste deck(the only one left)
-                    else
+                    /*else
                     {
                         card.IsDraggable = false;
                         //card.SetFaceDown();
@@ -205,7 +215,8 @@ namespace SimpleSolitaire.Controller
                                 card.gameObject.transform.position = gameObject.transform.position + new Vector3(_wasteHorizontalSpace, 0, 0);
                             }
                         }
-                    }
+                    }*/
+
                     //if this Card is the first/top card in any Deck but the Pack/Main Deck,
                     if (i == this.CardsArray.Count - 1)
                     {
