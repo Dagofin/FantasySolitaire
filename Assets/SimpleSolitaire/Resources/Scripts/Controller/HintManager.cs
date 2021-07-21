@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Button = UnityEngine.UI.Button;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace SimpleSolitaire.Controller
 {
@@ -46,6 +47,7 @@ namespace SimpleSolitaire.Controller
         /// </summary>
         private void Hint(float time = 0.75f, bool isNeedSetCard = false, Card card = null)
         {
+            //  TWEEN FLAG - CALLED FROM SET BY DOUBLE CLICK FROM CARD
             //if Hints list has hints and the HintProcess isn't running, and this object is active
             if (Hints.Count > 0 && !IsHintProcess && gameObject.activeInHierarchy)
             {
@@ -57,6 +59,7 @@ namespace SimpleSolitaire.Controller
                 }
                 //if HintCoroutine isn't running, start a HintCoroutine as HintTranslate, send the card to the hint spot
                 //move card to the new location according to speed DoubleTapTranslateTime
+                //TWEEN FLAG - THIS FUNCTION SENDS THE CARD TO THE TARGET LOCATION
                 HintCoroutine = HintTranslate(time, isNeedSetCard, card);
                 StartCoroutine(HintCoroutine);
             }
@@ -141,6 +144,7 @@ namespace SimpleSolitaire.Controller
 		/// </summary>
 		public void HintAndSetByDoubleClick(Card card)
         {
+            //TWEEN FLAG - CALLED FROM CLICKING ON CARD
             Hint(DoubleTapTranslateTime, true, card);
         }
 
@@ -165,6 +169,7 @@ namespace SimpleSolitaire.Controller
         /// </summary>
         private IEnumerator HintTranslate(float time = 0.75f, bool isNeedSetCard = false, Card card = null)
         {
+            //TWEEN FLAG - THIS IS WHAT SENDS THE CARD TO THE TARGET POSITION
             //time = speed of translate movement
             //isNeedSetCard = 
             //card = card being moved
@@ -227,8 +232,9 @@ namespace SimpleSolitaire.Controller
             //set the hintCard to the top of it's current Deck(why?)
             hintCard.Deck.SetCardsToTop(hintCard);
 
-
+            //TWEEN FLAG - THIS IS WHAT WE WANT TO MESS WITH
             //Physically move the hintCard where it needs to go
+            ///*
             while (t < 1)
             {
                 //use Time.deltaTime and time to progress the Lerp function from 0 to 1
@@ -238,13 +244,25 @@ namespace SimpleSolitaire.Controller
                 hintCard.transform.localPosition = Vector3.Lerp(hints[CurrentHintIndex].FromPosition, hints[CurrentHintIndex].ToPosition, t);
                 //hintCard.transform.localPosition = Vector3.Lerp(hints[CurrentHintIndex].FromPosition, hints[CurrentHintIndex].ToPosition - new Vector3(0, 32, 0), t);
 
+                
+
                 yield return new WaitForEndOfFrame();
                 //sets the position of the card, but we're already updating it via the Lerp? Maybe a reset function due to the local position above
                 hints[CurrentHintIndex].HintCard.Deck.SetPositionFromCard(hintCard,
                                                                      hintCard.transform.position.x,
                                                                      hintCard.transform.position.y);
-            }
+            }//*/
 
+            //TWEEN TESTING
+            /*hintCard.transform.DOLocalMove(hints[CurrentHintIndex].ToPosition, 0.75f).SetEase(Ease.OutQuint);
+
+           
+                hints[CurrentHintIndex].HintCard.Deck.SetPositionFromCard(hintCard,
+                                                     hintCard.transform.position.x,
+                                                     hintCard.transform.position.y);
+
+            yield return new WaitForSeconds(.75f);*/
+            
             //---------------------------------------------- Not going to use, Hint function is going to change ---------------------------------------------------------------------------
             /*
             //If IsHasHint returns true AND isNeedSetCard is false(aka the Player didn't click this card), reset this card to it's original state(before it was translated)

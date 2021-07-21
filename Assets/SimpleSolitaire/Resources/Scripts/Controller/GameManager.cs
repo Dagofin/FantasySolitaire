@@ -125,7 +125,7 @@ namespace SimpleSolitaire.Controller
 
 		private int _timeCount;
 		private int _stepCount;
-		private int _scoreCount;
+		int _scoreCount;
 		private Coroutine _timeCoroutine;
 
 		private bool _soundEnable;
@@ -867,16 +867,16 @@ namespace SimpleSolitaire.Controller
 		public void OnApplicationQuit()
 		{
 			//Uncomment if you wanna save last game only when User made a move in game.
-			//if (_cardLogic.IsMoveWasMadeByUser())
-			//{
+			if (_cardLogic.IsMoveWasMadeByUser())
+			{
 				_cardLogic.WriteUndoState();
 				_undoPerformComponent.SaveGame(_timeCount, _stepCount, _scoreCount);
-			//}
+			}
 			//Uncomment if you wanna delete last game if user had not made a move.
-			//else
-			//{
-			//	_undoPerformComponent.DeleteLastGame();
-			//}
+			else
+			{
+				_undoPerformComponent.DeleteLastGame();
+			}
 		}
 	}
 }

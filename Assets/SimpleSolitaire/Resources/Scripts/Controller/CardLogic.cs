@@ -212,6 +212,9 @@ namespace SimpleSolitaire.Controller
 					if (PackDeck.GetCardNums() > 0)
 					{
 						//if you click on the pack deck, send a card to the waste deck
+						//------------------------------------------------------------------------------------------------------------------------------------------------------------
+						//flip and tween the card to the waste deck, then do this stuff when it's there
+						
 						WasteDeck.PushCard(PackDeck.Pop());
 						//update the cards positions in the pack and waste decks to reflect the code change of adding the card from the pack deck to the waste deck
 						PackDeck.UpdateCardsPosition(false);
@@ -219,6 +222,7 @@ namespace SimpleSolitaire.Controller
 					}
 					else
 					{
+						//reset the waste deck to the pack deck
 						if (WasteDeck.GetCardNums() > 0)
 						{
 							MoveWasteToPack();

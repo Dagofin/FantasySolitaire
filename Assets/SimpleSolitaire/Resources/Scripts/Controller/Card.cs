@@ -288,11 +288,11 @@ namespace SimpleSolitaire.Controller
         }
         public void SetFaceUp(bool firstTime)
         {
-            //if (firstTime)
-            //{
+            if (firstTime)
+            {
 
 
-            //}
+            }
 
             if (isFaceDown == true)
             {

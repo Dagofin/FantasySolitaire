@@ -91,21 +91,18 @@ namespace SimpleSolitaire.Controller {
 
         public void ShowAd(string p)
         {
-            //if (adsActive == true)
-            if(permanentNoAds == true || tempNoAds == true)
+            //doubleXP ads active regardless of other ads status
+            if(p != "doubleXP")
             {
-                if(p == "refillUndos")
+                //if ads are disabled, do not show an ad
+                if (permanentNoAds == true || tempNoAds == true)
                 {
-                    undoPerformer.UpdateUndoCounts();
+                    return;
                 }
+            }
 
-                return;
-            }
-            else
-            {
-                Advertisement.Show(p);
-                Analytics.CustomEvent("initializeAd", new Dictionary<string, object> { { "adType", p } });
-            }
+            Advertisement.Show(p);
+            Analytics.CustomEvent("initializeAd", new Dictionary<string, object> { { "adType", p } });
         }
 
         public void CheckNoAdsOnStart()
@@ -224,6 +221,10 @@ namespace SimpleSolitaire.Controller {
             //disable the timer and button
             tempNoAdsButton.SetActive(false);
             tempNoAdsTimer.SetActive(false);
+
+            //set undos to unlimited
+            undoPerformer.IsCountable = false;
+            undoPerformer.ActivateUndoButton();
         }
 
         public void DoubleXP(Text tempScore)

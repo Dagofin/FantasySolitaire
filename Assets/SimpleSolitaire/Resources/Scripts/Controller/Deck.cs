@@ -177,6 +177,8 @@ namespace SimpleSolitaire.Controller
 
                     else if(Type == DeckType.DECK_TYPE_WASTE)
                     {
+
+
                         //restack the cards directly on top of each other
                         card.IsDraggable = false;
                         //card.SetFaceDown(false, this);
@@ -247,14 +249,22 @@ namespace SimpleSolitaire.Controller
                         //----------------------------------------------------------------------------------
                     }
                     //if this Card is any card but the first/top card in the deck
-                    else
+                    else 
                     {
                         if (firstTime)
                         {
-                            //if initializing the bottom decks and this card isn't the first in the stack, set it to be facedown and not draggable. 
-                            card.IsDraggable = false;
-                            card.CardStatus = 0;
-                            card.SetFaceDown(firstTime, this);
+                            if (Type == DeckType.DECK_TYPE_WASTE)
+                            {
+                                card.UpdateCardImg();
+                            }
+                            else
+                            {
+                                //if initializing the bottom decks and this card isn't the first in the stack, set it to be facedown and not draggable. 
+                                card.IsDraggable = false;
+                                card.CardStatus = 0;
+                                card.SetFaceDown(firstTime, this);
+                            }
+
                         }
                         //'Flip card facedown' aka update sprite to the card back
                         card.UpdateCardImg();

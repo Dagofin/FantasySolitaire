@@ -213,4 +213,5 @@ namespace SimpleSolitaire.Controller
 			}
 		}
 	}
+
 }

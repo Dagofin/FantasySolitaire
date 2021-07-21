@@ -23,14 +23,18 @@ namespace SimpleSolitaire.Controller
         public void Awake()
         {
 			//myAnimator = GetComponent<Animator>();
+			//CheckUnlockAtStart(gameManager.playerLevel);
+		}
+
+        public void OnEnable()
+        {
 			CheckUnlockAtStart(gameManager.playerLevel);
 		}
 
         public void Start()
         {
-			
-			
-        }
+
+		}
 
 		public void CheckUnlockAtStart(int playerLevel)
         {
@@ -39,19 +43,21 @@ namespace SimpleSolitaire.Controller
 				Unlock(false);
             }
 
-			else
+			else if(playerLevel < unlockedAtLevel)
             {
 				Lock();
+				return;
             }
         }
 
 		public void Unlock(bool firstTime)
         {
 			isUnlocked = true;
-
+			myAnimator.SetBool("isUnlocked", isUnlocked);
 			LockedTile.SetActive(false);
 			//change animation state to idle
-			myAnimator.Play("CurrentShirt");
+			//myAnimator.Play("CurrentShirt");
+			
         }
 
 		public void Lock()
@@ -60,7 +66,8 @@ namespace SimpleSolitaire.Controller
 			levelText.text = unlockedAtLevel.ToString();
 			LockedTile.SetActive(true);
 			//change animation state to locked
-			myAnimator.Play("CollectionDialog_CardLocked");
+			//myAnimator.Play("CollectionDialog_CardLocked");
+			myAnimator.SetBool("isUnlocked", isUnlocked);
 		}
 
 
