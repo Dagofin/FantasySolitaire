@@ -142,6 +142,7 @@ namespace SimpleSolitaire.Controller
 		private int winXP = 150;
 		public XPBar winDialogXPBar;
 		public XPBar settingsXPBar;
+        public Image doubleXPIcon;
 		private static readonly int[] maxXPPerLevel = new[] {4000, 10000, 10000, 10000, 10000, 10000, 15000, 15000, 15000, 15000, 15000, 20000, 20000, 20000, 20000, 20000, 25000};
 		[SerializeField]
 		private int maxXPLevel15;
@@ -292,6 +293,7 @@ namespace SimpleSolitaire.Controller
 			_cardLayer.SetActive(false);
 			_winLayer.SetActive(true);
 			adsManager.doubleXPButton.gameObject.SetActive(true);
+            doubleXPIcon.gameObject.SetActive(false);
 
 			StopGameTimer();
 			_congratManagerComponent.CongratulationTextFill();
@@ -390,7 +392,13 @@ namespace SimpleSolitaire.Controller
 			
         }
 
-
+        public void DoubleXPGo(int doubleXPScore)
+        {
+            StartCoroutine(HandleXPOnWin(doubleXPScore));
+            //disable double xp button
+            //enable double xp icon
+            doubleXPIcon.gameObject.SetActive(true);
+        }
 
 		/// <summary>
 		/// Save to prefs best score if it need :)

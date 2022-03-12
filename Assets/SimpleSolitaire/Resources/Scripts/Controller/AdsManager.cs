@@ -277,7 +277,8 @@ namespace SimpleSolitaire.Controller {
                 {
                     //repeat XP gain sequence with same XP
                     //gameManager.StartCoroutine(HandleXPOnWin(score));
-                    StartCoroutine(gameManager.HandleXPOnWin(doubleXPScore));
+                    //StartCoroutine(gameManager.HandleXPOnWin(doubleXPScore));
+                    gameManager.DoubleXPGo(doubleXPScore);
                     doubleXPButton.gameObject.SetActive(false);
 
                     adsWatched++;
